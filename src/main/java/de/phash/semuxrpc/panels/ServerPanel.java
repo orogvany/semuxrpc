@@ -1,4 +1,4 @@
-package de.phash.semuxrpc;
+package de.phash.semuxrpc.panels;
 
 import javax.swing.GroupLayout;
 import javax.swing.JFormattedTextField;
@@ -8,6 +8,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import de.phash.semuxrpc.Server;
 
 public class ServerPanel extends JPanel {
 
@@ -21,12 +23,12 @@ public class ServerPanel extends JPanel {
     private JPasswordField passwordField;
     private JTextField textFieldOwnAddress;
 
-    ServerPanel() {
+    public ServerPanel() {
         super();
         JLabel lblServer = new JLabel("Server");
 
         textFieldServer = new JTextField();
-        textFieldServer.setText("");
+        textFieldServer.setText("http://192.168.178.52");
         textFieldServer.setColumns(10);
 
         JLabel lblPort = new JLabel("Port");
@@ -38,7 +40,7 @@ public class ServerPanel extends JPanel {
         JLabel lblRPCUser = new JLabel("RPC User");
 
         textFieldRPCUser = new JTextField();
-        textFieldRPCUser.setText("");
+        textFieldRPCUser.setText("phash");
         textFieldRPCUser.setColumns(10);
 
         JLabel lblRpcPass = new JLabel("RPC Pass");

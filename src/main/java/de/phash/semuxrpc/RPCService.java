@@ -11,4 +11,6 @@ public interface RPCService {
 
     String transferValue(Transaction transaction, Server server) throws IOException;
 
+    void sendRawTransaction(String raw, Server server) throws IOException;
+
 }

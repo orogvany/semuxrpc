@@ -21,8 +21,15 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.semux.crypto.Hex;
+import org.semux.util.Bytes;
+
 import de.phash.semuxrpc.dto.Transaction;
 import de.phash.semuxrpc.gui.SwingUtil;
+import de.phash.semuxrpc.panels.AccountInfoPanel;
+import de.phash.semuxrpc.panels.ServerPanel;
+import de.phash.semuxrpc.panels.SignPanel;
+import de.phash.semuxrpc.panels.TransferPanel;
 
 public class RpcGUI extends JFrame implements ActionListener {
 
@@ -30,13 +37,15 @@ public class RpcGUI extends JFrame implements ActionListener {
 
     private JPanel activePanel = new JPanel();
     private JButton activeButton = new JButton();
-    private RPCService rpcService;
+    private RPCService rpcService = new RPCServiceImpl();
     private ServerPanel serverPanel;
     private AccountInfoPanel accountInfoPanel;
     private TransferPanel transferPanel;
+    private SignPanel signPanel;
     private JButton btnInfo;
     private JButton btnTransfer;
     private JButton btnVote;
+    private JButton btnSign;
 
     /**
      * @throws HeadlessException
@@ -54,6 +63,7 @@ public class RpcGUI extends JFrame implements ActionListener {
         serverPanel = new ServerPanel();
         accountInfoPanel = new AccountInfoPanel(this);
         transferPanel = new TransferPanel(this);
+        signPanel = new SignPanel(this);
         JPanel menuPanel = new JPanel();
         GroupLayout groupLayout = new GroupLayout(getContentPane());
         groupLayout.setHorizontalGroup(
@@ -88,6 +98,7 @@ public class RpcGUI extends JFrame implements ActionListener {
         btnTransfer = SwingUtil.createDefaultButton("Transfer", this, Action.SHOW_TRANSFER);
 
         btnVote = SwingUtil.createDefaultButton("vote", this, Action.SHOW_VOTE);
+        btnSign = SwingUtil.createDefaultButton("sign", this, Action.SHOW_SIGN);
 
         GroupLayout glMenuPanel = new GroupLayout(menuPanel);
         glMenuPanel.setHorizontalGroup(
@@ -99,6 +110,8 @@ public class RpcGUI extends JFrame implements ActionListener {
                                 .addComponent(btnTransfer)
                                 .addGap(18)
                                 .addComponent(btnVote)
+                                .addGap(18)
+                                .addComponent(btnSign)
                                 .addContainerGap(563, Short.MAX_VALUE)));
         glMenuPanel.setVerticalGroup(
                 glMenuPanel.createParallelGroup(Alignment.LEADING)
@@ -107,7 +120,8 @@ public class RpcGUI extends JFrame implements ActionListener {
                                 .addGroup(glMenuPanel.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(btnInfo)
                                         .addComponent(btnTransfer)
-                                        .addComponent(btnVote))
+                                        .addComponent(btnVote)
+                                        .addComponent(btnSign))
                                 .addContainerGap(43, Short.MAX_VALUE)));
         menuPanel.setLayout(glMenuPanel);
         getContentPane().setLayout(groupLayout);
@@ -137,13 +151,13 @@ public class RpcGUI extends JFrame implements ActionListener {
 
         switch (action) {
         case SHOW_ACCOUNTINFO:
-           select(accountInfoPanel, btnInfo);
+            select(accountInfoPanel, btnInfo);
             break;
         case SHOW_TRANSFER:
             select(transferPanel, btnTransfer);
             break;
-        case SHOW_VOTE:
-
+        case SHOW_SIGN:
+            select(signPanel, btnSign);
             break;
         default:
             throw new IllegalStateException("No such action");
@@ -177,7 +191,11 @@ public class RpcGUI extends JFrame implements ActionListener {
     }
 
     public String transferValue(Transaction transaction) throws IOException {
-        return rpcService.transferValue( transaction, getServer());
+        return rpcService.transferValue(transaction, getServer());
+    }
+
+    public void sendTransaction(org.semux.core.Transaction tx) throws IOException {
+       rpcService.sendRawTransaction(Hex.encode0x(tx.toBytes()), getServer());
     }
 
 }

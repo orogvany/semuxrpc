@@ -1,13 +1,15 @@
 package de.phash.semuxrpc;
 
-public class AccountInfo {
+import java.io.Serializable;
+
+public class AccountInfo implements Serializable{
 
     private String address;
     
     private String balance;
     private String locked;
     
-    private Integer nonce;
+    private Long nonce;
 
     /**
      * @param address
@@ -15,7 +17,7 @@ public class AccountInfo {
      * @param locked
      * @param nonce
      */
-    AccountInfo(String address, String balance, String locked, Integer nonce) {
+    AccountInfo(String address, String balance, String locked, Long nonce) {
         super();
         this.address = address;
         this.balance = balance;
@@ -47,11 +49,11 @@ public class AccountInfo {
         this.locked = locked;
     }
 
-    public Integer getNonce() {
+    public Long getNonce() {
         return nonce;
     }
 
-    public void setNonce(Integer nonce) {
+    public void setNonce(Long nonce) {
         this.nonce = nonce;
     }
 

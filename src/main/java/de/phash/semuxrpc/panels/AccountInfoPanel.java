@@ -1,4 +1,4 @@
-package de.phash.semuxrpc;
+package de.phash.semuxrpc.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import de.phash.semuxrpc.AccountInfo;
+import de.phash.semuxrpc.Action;
+import de.phash.semuxrpc.RpcGUI;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class AccountInfoPanel extends JPanel implements ActionListener {

@@ -1,7 +1,13 @@
 package de.phash.semuxrpc;
 
-public class Server {
+import java.io.Serializable;
 
+public class Server implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private String serverAddress;
     private String serverPort;
     private String rpcUser;
@@ -36,7 +42,7 @@ public class Server {
      * @param rpcUser
      * @param password
      */
-    Server(String serverAddress, String serverPort, String rpcUser, String password) {
+    public Server(String serverAddress, String serverPort, String rpcUser, String password) {
         super();
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
