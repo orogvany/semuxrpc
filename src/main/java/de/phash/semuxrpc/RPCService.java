@@ -1,16 +1,20 @@
 package de.phash.semuxrpc;
 
 import java.io.IOException;
+import java.security.spec.InvalidKeySpecException;
 
-import de.phash.semuxrpc.dto.Transaction;
+import org.semux.core.Transaction;
+import org.semux.crypto.CryptoException;
+
+import de.phash.semux.swagger.client.ApiException;
+import de.phash.semux.swagger.client.model.GetAccountResponse;
+import de.phash.semux.swagger.client.model.GetAccountTransactionsResponse;
+import de.phash.semux.swagger.client.model.SendTransactionResponse;
 
 public interface RPCService {
 
+    GetAccountResponse getAccountInfo(String address, Server server) throws IOException, ApiException;
 
-    AccountInfo getAccountInfo(String address, Server server) throws IOException;
-
-    String transferValue(Transaction transaction, Server server) throws IOException;
-
-    void sendRawTransaction(String raw, Server server) throws IOException;
+    SendTransactionResponse sendTransaction(Transaction transaction, Server server) throws IOException, ApiException, InvalidKeySpecException, CryptoException;
 
 }

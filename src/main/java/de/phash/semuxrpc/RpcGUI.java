@@ -8,23 +8,27 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.semux.crypto.Hex;
-import org.semux.util.Bytes;
+import org.semux.core.Transaction;
+import org.semux.crypto.CryptoException;
 
-import de.phash.semuxrpc.dto.Transaction;
+import de.phash.semux.swagger.client.ApiException;
+import de.phash.semux.swagger.client.model.GetAccountResponse;
+import de.phash.semux.swagger.client.model.GetAccountTransactionsResponse;
+import de.phash.semux.swagger.client.model.SendTransactionResponse;
 import de.phash.semuxrpc.gui.SwingUtil;
 import de.phash.semuxrpc.panels.AccountInfoPanel;
 import de.phash.semuxrpc.panels.ServerPanel;
@@ -137,7 +141,7 @@ public class RpcGUI extends JFrame implements ActionListener {
         return rpcService;
     }
 
-    public AccountInfo getAccountInfo(String address) throws IOException {
+    public GetAccountResponse getAccountInfo(String address) throws IOException, de.phash.semux.swagger.client.ApiException {
         return rpcService.getAccountInfo(address, getServer());
     }
 
@@ -190,12 +194,12 @@ public class RpcGUI extends JFrame implements ActionListener {
         activePanel.repaint();
     }
 
-    public String transferValue(Transaction transaction) throws IOException {
-        return rpcService.transferValue(transaction, getServer());
-    }
+//    public String transferValue(Transaction transaction) throws IOException {
+//        return rpcService.transferValue(transaction, getServer());
+//    }
 
-    public void sendTransaction(org.semux.core.Transaction tx) throws IOException {
-       rpcService.sendRawTransaction(Hex.encode0x(tx.toBytes()), getServer());
+    public SendTransactionResponse sendTransaction(Transaction tx) throws IOException, InvalidKeySpecException, CryptoException, ApiException {
+       return rpcService.sendTransaction(tx, getServer());
     }
 
 }

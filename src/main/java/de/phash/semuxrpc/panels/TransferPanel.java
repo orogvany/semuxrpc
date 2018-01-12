@@ -3,20 +3,27 @@ package de.phash.semuxrpc.panels;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.math.BigInteger;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.semux.config.Config;
+import org.semux.config.MainNetConfig;
+import org.semux.core.Transaction;
+import org.semux.core.TransactionType;
+import org.semux.crypto.CryptoException;
+import org.semux.crypto.Hex;
+
+import de.phash.semux.swagger.client.ApiException;
+import de.phash.semux.swagger.client.model.SendTransactionResponse;
 import de.phash.semuxrpc.Action;
 import de.phash.semuxrpc.RpcGUI;
-import de.phash.semuxrpc.dto.Transaction;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class TransferPanel extends JPanel implements ActionListener {
@@ -127,6 +134,8 @@ public class TransferPanel extends JPanel implements ActionListener {
         setLayout(groupLayout);
     }
 
+    private Config c = new MainNetConfig("");
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -135,16 +144,18 @@ public class TransferPanel extends JPanel implements ActionListener {
         switch (action) {
         case TRANSFER:
             lblResult.setIcon(SwingUtil.loadImage("yellow", 20, 20));
-            BigInteger amount = new BigInteger( formattedTextFieldAmount.getText());
-            BigInteger fee = new BigInteger( formattedTextFieldFee.getText());
-            
-            Transaction transaction = new Transaction(textFieldFrom.getText(), textFieldTo.getText(),
-                    amount,
-                    fee, "", chckbxAutoFee.isSelected());
             try {
-                String hash = rpcGUI.transferValue(transaction);
+                Long amount = Long.parseLong(formattedTextFieldAmount.getText());
+                Long fee = c.minTransactionFee();
+                byte[] to = Hex.decode0x(textFieldTo.getText());
+                byte[] data = Hex.decode0x("");
+                Long nonce = rpcGUI.getAccountInfo(textFieldFrom.getText()).getResult().getNonce();
+                Transaction transaction = new Transaction(TransactionType.TRANSFER, to, amount, fee, nonce,
+                        System.currentTimeMillis(), data);
+                SendTransactionResponse result = rpcGUI.sendTransaction(transaction);
+
                 lblResult.setIcon(SwingUtil.loadImage("green", 20, 20));
-            } catch (IOException e1) {
+            } catch (IOException | InvalidKeySpecException | CryptoException | ApiException e1) {
                 lblResult.setIcon(SwingUtil.loadImage("red", 20, 20));
                 e1.printStackTrace();
             }

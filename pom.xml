@@ -154,12 +154,18 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-			<dependency>
-	    <groupId>com.github.semuxproject</groupId>
-	    <artifactId>semux</artifactId>
-	    <version>v1.0.0-rc.5</version>
-	</dependency>
-		
+		<dependency>
+			<groupId>com.github.semuxproject</groupId>
+			<artifactId>semux</artifactId>
+			<version>v1.0.0-rc.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.phash</groupId>
+			<artifactId>semux-swagger</artifactId>
+			<version>-SNAPSHOT</version>
+		</dependency>
+
 	</dependencies>
 	<repositories>
 		<repository>

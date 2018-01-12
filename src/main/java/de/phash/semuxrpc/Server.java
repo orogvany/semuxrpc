@@ -4,14 +4,19 @@ import java.io.Serializable;
 
 public class Server implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private String serverAddress;
     private String serverPort;
     private String rpcUser;
     private String password;
+    private String privateKey;
+    
+    public String getPrivateKey() {
+        return privateKey;
+    }
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
     public String getServerAddress() {
         return serverAddress;
     }
@@ -41,13 +46,15 @@ public class Server implements Serializable {
      * @param serverPort
      * @param rpcUser
      * @param password
+     * @param privateKey 
      */
-    public Server(String serverAddress, String serverPort, String rpcUser, String password) {
+    public Server(String serverAddress, String serverPort, String rpcUser, String password, String privateKey) {
         super();
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.rpcUser = rpcUser;
         this.password = password;
+        this.privateKey = privateKey;
     }
 
 }

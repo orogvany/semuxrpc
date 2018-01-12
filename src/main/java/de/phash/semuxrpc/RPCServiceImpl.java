@@ -1,103 +1,60 @@
 package de.phash.semuxrpc;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
-import java.util.Scanner;
 
-import org.json.JSONObject;
+import org.semux.core.Transaction;
+import org.semux.crypto.CryptoException;
+import org.semux.crypto.EdDSA;
+import org.semux.crypto.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.phash.semuxrpc.dto.Transaction;
+import de.phash.semux.swagger.client.ApiClient;
+import de.phash.semux.swagger.client.ApiException;
+import de.phash.semux.swagger.client.api.DefaultApi;
+import de.phash.semux.swagger.client.model.GetAccountResponse;
+import de.phash.semux.swagger.client.model.SendTransactionResponse;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class RPCServiceImpl implements RPCService {
     private static final Logger logger = LoggerFactory.getLogger(SwingUtil.class);
 
-    @Override
-    public AccountInfo getAccountInfo(String address, Server server) throws IOException {
-
-        URL url = new URL(
-                server.getServerAddress() + ":" + server.getServerPort() + "/get_account?address=" + address);
-        HttpURLConnection conn = getHttpUrlConn(server, url);
-
-        Scanner scan = new Scanner(conn.getInputStream());
-        StringBuffer sb = new StringBuffer();
-        while (scan.hasNext())
-            sb.append(scan.nextLine());
-        scan.close();
-
-        JSONObject obj = new JSONObject(sb.toString());
-        JSONObject res = obj.getJSONObject("result");
-
-        return new AccountInfo(address, res.getBigInteger("available").toString(),
-                res.getBigInteger("locked").toString(), res.getLong("nonce"));
-
-    }
-
-    @Override
-    public void sendRawTransaction(String raw, Server server) throws IOException {
-        logger.info("raw: " + raw);
-        URL url = new URL(
-                server.getServerAddress() + ":" + server.getServerPort() + "/send_transaction?raw=" + raw);
-        HttpURLConnection conn = getHttpUrlConn(server, url);
-
-        Scanner scan = new Scanner(conn.getInputStream());
-        StringBuffer sb = new StringBuffer();
-        while (scan.hasNext())
-            sb.append(scan.nextLine());
-        scan.close();
-
-    }
-
-    @Override
-    public String transferValue(Transaction transaction, Server server) throws IOException {
-
-        BigInteger value = transaction.getValue();
-        BigInteger fee = transaction.getFee();
-        if (!transaction.isAdd())
-            value = value.subtract(fee);
-
-        URL url = new URL(server.getServerAddress() + ":" + server.getServerPort() +
-                "/transfer?from=" + transaction.getFrom() +
-                "&to=" + transaction.getTo() +
-                "&value=" + transaction.getValue().toString() +
-                "&fee=" + transaction.getFee().toString() +
-                "&data=" + transaction.getData()
-
-        );
-        HttpURLConnection conn = getHttpUrlConn(server, url);
-
-        Scanner scan = new Scanner(conn.getInputStream());
-        StringBuffer sb = new StringBuffer();
-        while (scan.hasNext())
-            sb.append(scan.nextLine());
-        scan.close();
-
-        JSONObject obj = new JSONObject(sb.toString());
-        // JSONObject res = obj.getJSONObject("result");
-        return obj.getString("result");
-    }
-
-    private HttpURLConnection getHttpUrlConn(Server server, URL url) throws IOException, ProtocolException {
-        String authStringEnc = getAuthString(server);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Authorization", "Basic " + authStringEnc);
-        return conn;
-    }
-
     private String getAuthString(Server server) {
         String authString = server.getRpcUser() + ":" + server.getPassword();
         byte[] authEncBytes = Base64.getEncoder().encode(authString.getBytes());
         return new String(authEncBytes);
+    }
+
+    @Override
+    public GetAccountResponse getAccountInfo(String address, Server server) throws IOException, ApiException {
+        return getApi(server).getAccount(address);
+    }
+
+    public DefaultApi getApi(Server server) {
+        ApiClient client = getApiClient(server);
+        return new DefaultApi(client);
+    }
+
+    private ApiClient getApiClient(Server server) {
+        ApiClient a = new ApiClient();
+        a.setUsername(server.getRpcUser());
+        a.setPassword(server.getPassword());
+
+        return a.setBasePath(server.getServerAddress() + ":" + server.getServerPort());
+    }
+
+    @Override
+    public SendTransactionResponse sendTransaction(Transaction transaction, Server server)
+            throws IOException, ApiException, InvalidKeySpecException, CryptoException {
+        return getApi(server).sendTransaction(signTransaction(transaction, server.getPrivateKey()));
+    }
+
+    private String signTransaction(Transaction transaction, String privateKey)
+            throws InvalidKeySpecException, CryptoException {
+        transaction.sign(new EdDSA(Hex.decode0x(privateKey)));
+        return Hex.encode0x(transaction.toBytes());
     }
 
 }

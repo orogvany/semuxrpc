@@ -12,7 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import de.phash.semuxrpc.AccountInfo;
+import de.phash.semux.swagger.client.ApiException;
+import de.phash.semux.swagger.client.model.GetAccountResponse;
+import de.phash.semux.swagger.client.model.GetAccountTransactionsResponse;
 import de.phash.semuxrpc.Action;
 import de.phash.semuxrpc.RpcGUI;
 import de.phash.semuxrpc.gui.SwingUtil;
@@ -128,13 +130,15 @@ public class AccountInfoPanel extends JPanel implements ActionListener {
         switch (action) {
         case ACCOUNTINFO:
             lblResult.setIcon( SwingUtil.loadImage("yellow", 20, 20));
-            AccountInfo info;
             try {
+                GetAccountResponse info;
                 info = rpcGUI.getAccountInfo(textFieldAddress.getText());
-                updateAccountInfo(info);
+                updateAccountInfo(info); 
                 lblResult.setIcon( SwingUtil.loadImage("green", 20, 20));
             } catch (IOException e1) {
                 lblResult.setIcon( SwingUtil.loadImage("red", 20, 20));
+                e1.printStackTrace();
+            } catch (ApiException e1) {
                 e1.printStackTrace();
             }
             
@@ -146,9 +150,9 @@ public class AccountInfoPanel extends JPanel implements ActionListener {
         
     }
 
-    private void updateAccountInfo(AccountInfo info) {
-        textFieldBalance.setText(info.getBalance().toString());
-        textFieldLocked.setText(info.getLocked().toString());
-        textFieldNonce.setText(info.getNonce().toString());
+    private void updateAccountInfo(GetAccountResponse info) {
+        textFieldBalance.setText(info.getResult().getAvailable() .toString());
+        textFieldLocked.setText(info.getResult().getLocked().toString());
+        textFieldNonce.setText(info.getResult(). getNonce().toString());
     }
 }

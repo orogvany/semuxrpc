@@ -14,7 +14,8 @@ import de.phash.semuxrpc.Server;
 public class ServerPanel extends JPanel {
 
     public Server getServer() {
-       return new Server(textFieldServer.getText(), textFieldPort.getText(), textFieldRPCUser.getText(), passwordField.getText());
+        return new Server(textFieldServer.getText(), textFieldPort.getText(), textFieldRPCUser.getText(),
+                String.copyValueOf(passwordField.getPassword()), String.copyValueOf(pwdPrivatekey.getPassword()));
     }
 
     private JTextField textFieldServer;
@@ -22,6 +23,7 @@ public class ServerPanel extends JPanel {
     private JTextField textFieldRPCUser;
     private JPasswordField passwordField;
     private JTextField textFieldOwnAddress;
+    private JPasswordField pwdPrivatekey;
 
     public ServerPanel() {
         super();
@@ -51,52 +53,70 @@ public class ServerPanel extends JPanel {
 
         textFieldOwnAddress = new JTextField();
         textFieldOwnAddress.setColumns(10);
+
+        JLabel lblPrivateKey = new JLabel("Private Key");
+
+        pwdPrivatekey = new JPasswordField();
+
         GroupLayout gl_serverPanel = new GroupLayout(this);
         gl_serverPanel.setHorizontalGroup(
-            gl_serverPanel.createParallelGroup(Alignment.LEADING)
-                .addGroup(gl_serverPanel.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.LEADING)
-                        .addComponent(lblRPCUser, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblRpcPass)
-                        .addComponent(lblOwnAddress)
-                        .addComponent(lblServer)
-                        .addComponent(lblPort))
-                    .addGap(14)
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.LEADING)
-                        .addComponent(textFieldPort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textFieldRPCUser, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                        .addComponent(passwordField, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                        .addComponent(textFieldOwnAddress, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                        .addComponent(textFieldServer, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
+                gl_serverPanel.createParallelGroup(Alignment.LEADING)
+                        .addGroup(Alignment.TRAILING, gl_serverPanel.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(lblRPCUser, GroupLayout.PREFERRED_SIZE, 67,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblRpcPass)
+                                        .addComponent(lblOwnAddress)
+                                        .addComponent(lblServer)
+                                        .addComponent(lblPort)
+                                        .addComponent(lblPrivateKey))
+                                .addGap(14)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.TRAILING)
+                                        .addComponent(pwdPrivatekey, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 349,
+                                                Short.MAX_VALUE)
+                                        .addComponent(textFieldPort, Alignment.LEADING, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(textFieldRPCUser, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                                        .addComponent(passwordField, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                                        .addComponent(textFieldOwnAddress, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+                                                349, Short.MAX_VALUE)
+                                        .addComponent(textFieldServer, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
+                                .addContainerGap()));
         gl_serverPanel.setVerticalGroup(
-            gl_serverPanel.createParallelGroup(Alignment.LEADING)
-                .addGroup(gl_serverPanel.createSequentialGroup()
-                    .addGap(29)
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(lblServer)
-                        .addComponent(textFieldServer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(lblPort)
-                        .addComponent(textFieldPort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(lblRPCUser)
-                        .addComponent(textFieldRPCUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(lblRpcPass)
-                        .addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(lblOwnAddress)
-                        .addComponent(textFieldOwnAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(127, Short.MAX_VALUE))
-        );
+                gl_serverPanel.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_serverPanel.createSequentialGroup()
+                                .addGap(29)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblServer)
+                                        .addComponent(textFieldServer, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblPort)
+                                        .addComponent(textFieldPort, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblRPCUser)
+                                        .addComponent(textFieldRPCUser, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblRpcPass)
+                                        .addComponent(passwordField, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblOwnAddress)
+                                        .addComponent(textFieldOwnAddress, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18)
+                                .addGroup(gl_serverPanel.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblPrivateKey)
+                                        .addComponent(pwdPrivatekey, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(95, Short.MAX_VALUE)));
         setLayout(gl_serverPanel);
     }
-
 }
