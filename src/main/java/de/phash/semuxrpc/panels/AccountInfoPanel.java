@@ -14,7 +14,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semux.swagger.client.model.GetAccountResponse;
-import de.phash.semux.swagger.client.model.GetAccountTransactionsResponse;
 import de.phash.semuxrpc.Action;
 import de.phash.semuxrpc.RpcGUI;
 import de.phash.semuxrpc.gui.SwingUtil;

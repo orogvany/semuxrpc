@@ -2,13 +2,15 @@ package de.phash.semuxrpc;
 
 import java.io.Serializable;
 
-public class AccountInfo implements Serializable{
+import de.phash.semux.swagger.client.model.AccountType;
+
+public class AccountInfo implements Serializable {
 
     private String address;
-    
-    private String balance;
-    private String locked;
-    
+
+    private Long balance;
+    private Long locked;
+
     private Long nonce;
 
     /**
@@ -17,12 +19,19 @@ public class AccountInfo implements Serializable{
      * @param locked
      * @param nonce
      */
-    AccountInfo(String address, String balance, String locked, Long nonce) {
+    AccountInfo(String address, Long balance, Long locked, Long nonce) {
         super();
         this.address = address;
         this.balance = balance;
         this.locked = locked;
         this.nonce = nonce;
+    }
+
+    public AccountInfo(AccountType result) {
+        this.address = result.getAddress();
+        this.balance = result.getAvailable();
+        this.locked = result.getLocked();
+        this.nonce = result.getNonce();
     }
 
     public String getAddress() {
@@ -33,19 +42,19 @@ public class AccountInfo implements Serializable{
         this.address = address;
     }
 
-    public String getBalance() {
+    public Long getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(Long balance) {
         this.balance = balance;
     }
 
-    public String getLocked() {
+    public Long getLocked() {
         return locked;
     }
 
-    public void setLocked(String locked) {
+    public void setLocked(Long locked) {
         this.locked = locked;
     }
 
@@ -57,5 +66,4 @@ public class AccountInfo implements Serializable{
         this.nonce = nonce;
     }
 
-    
 }

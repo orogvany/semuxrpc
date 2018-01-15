@@ -23,17 +23,20 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import org.semux.core.Transaction;
+import org.semux.core.Wallet;
+import org.semux.core.state.Account;
 import org.semux.crypto.CryptoException;
+import org.semux.crypto.EdDSA;
 
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semux.swagger.client.model.GetAccountResponse;
-import de.phash.semux.swagger.client.model.GetAccountTransactionsResponse;
 import de.phash.semux.swagger.client.model.SendTransactionResponse;
 import de.phash.semuxrpc.gui.SwingUtil;
 import de.phash.semuxrpc.panels.AccountInfoPanel;
 import de.phash.semuxrpc.panels.ServerPanel;
 import de.phash.semuxrpc.panels.SignPanel;
 import de.phash.semuxrpc.panels.TransferPanel;
+import de.phash.semuxrpc.panels.WalletPanel;
 
 public class RpcGUI extends JFrame implements ActionListener {
 
@@ -46,10 +49,17 @@ public class RpcGUI extends JFrame implements ActionListener {
     private AccountInfoPanel accountInfoPanel;
     private TransferPanel transferPanel;
     private SignPanel signPanel;
+    private WalletPanel walletPanel;
     private JButton btnInfo;
     private JButton btnTransfer;
     private JButton btnVote;
     private JButton btnSign;
+    private JButton btnAccount;
+    
+    private Wallet wallet;
+    private String dataDir =".";
+
+    
 
     /**
      * @throws HeadlessException
@@ -59,6 +69,7 @@ public class RpcGUI extends JFrame implements ActionListener {
         this.setTitle("SemuxRPC");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(900, 600));
+        
         rpcService = new RPCServiceImpl();
         activePanel.setBorder(new EmptyBorder(0, 15, 15, 15));
         activePanel.setLayout(new BorderLayout(0, 0));
@@ -68,6 +79,7 @@ public class RpcGUI extends JFrame implements ActionListener {
         accountInfoPanel = new AccountInfoPanel(this);
         transferPanel = new TransferPanel(this);
         signPanel = new SignPanel(this);
+        walletPanel = new WalletPanel(this);
         JPanel menuPanel = new JPanel();
         GroupLayout groupLayout = new GroupLayout(getContentPane());
         groupLayout.setHorizontalGroup(
@@ -102,7 +114,8 @@ public class RpcGUI extends JFrame implements ActionListener {
         btnTransfer = SwingUtil.createDefaultButton("Transfer", this, Action.SHOW_TRANSFER);
 
         btnVote = SwingUtil.createDefaultButton("vote", this, Action.SHOW_VOTE);
-        btnSign = SwingUtil.createDefaultButton("sign", this, Action.SHOW_SIGN);
+      // btnSign = SwingUtil.createDefaultButton("sign", this, Action.SHOW_SIGN);
+        btnAccount = SwingUtil.createDefaultButton("Wallet", this, Action.SHOW_ACC);
 
         GroupLayout glMenuPanel = new GroupLayout(menuPanel);
         glMenuPanel.setHorizontalGroup(
@@ -113,9 +126,10 @@ public class RpcGUI extends JFrame implements ActionListener {
                                 .addGap(18)
                                 .addComponent(btnTransfer)
                                 .addGap(18)
-                                .addComponent(btnVote)
+                                .addComponent(btnAccount)
                                 .addGap(18)
-                                .addComponent(btnSign)
+                                .addComponent(btnVote)
+                                
                                 .addContainerGap(563, Short.MAX_VALUE)));
         glMenuPanel.setVerticalGroup(
                 glMenuPanel.createParallelGroup(Alignment.LEADING)
@@ -124,8 +138,8 @@ public class RpcGUI extends JFrame implements ActionListener {
                                 .addGroup(glMenuPanel.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(btnInfo)
                                         .addComponent(btnTransfer)
-                                        .addComponent(btnVote)
-                                        .addComponent(btnSign))
+                                        .addComponent(btnAccount)
+                                        .addComponent(btnVote))
                                 .addContainerGap(43, Short.MAX_VALUE)));
         menuPanel.setLayout(glMenuPanel);
         getContentPane().setLayout(groupLayout);
@@ -163,12 +177,17 @@ public class RpcGUI extends JFrame implements ActionListener {
         case SHOW_SIGN:
             select(signPanel, btnSign);
             break;
+        case SHOW_ACC:
+            select(walletPanel, btnAccount);
+            break;
         default:
             throw new IllegalStateException("No such action");
         }
 
     }
-
+    public String getDataDir() {
+        return dataDir;
+    }
     private static final Border BORDER_NORMAL = new CompoundBorder(new LineBorder(new Color(180, 180, 180)),
             new EmptyBorder(0, 5, 0, 10));
     private static final Border BORDER_FOCUS = new CompoundBorder(new LineBorder(new Color(51, 153, 255)),
@@ -194,12 +213,16 @@ public class RpcGUI extends JFrame implements ActionListener {
         activePanel.repaint();
     }
 
-//    public String transferValue(Transaction transaction) throws IOException {
-//        return rpcService.transferValue(transaction, getServer());
-//    }
-
     public SendTransactionResponse sendTransaction(Transaction tx) throws IOException, InvalidKeySpecException, CryptoException, ApiException {
        return rpcService.sendTransaction(tx, getServer());
+    }
+
+    public EdDSA getSelectedAccount() {
+      return rpcService.getSelectedWalletAccount();
+    }
+
+    public AccountInfo getAccount() throws IOException, ApiException {
+        return rpcService.getAccount(getServer());
     }
 
 }
