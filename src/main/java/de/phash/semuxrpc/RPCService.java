@@ -9,6 +9,7 @@ import org.semux.core.Wallet;
 import org.semux.core.state.Account;
 import org.semux.crypto.CryptoException;
 import org.semux.crypto.EdDSA;
+import org.semux.gui.model.WalletAccount;
 
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semux.swagger.client.model.GetAccountResponse;
@@ -28,5 +29,9 @@ public interface RPCService {
     Config getConfig();
 
     void setServer(Server server);
+
+
+    SendTransactionResponse sendTransaction(Transaction transaction, WalletAccount account)
+            throws IOException, ApiException, InvalidKeySpecException, CryptoException;
 
 }

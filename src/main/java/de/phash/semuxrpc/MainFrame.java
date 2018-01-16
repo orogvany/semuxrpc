@@ -20,6 +20,7 @@ import javax.swing.border.LineBorder;
 
 import de.phash.semuxrpc.gui.SwingUtil;
 import de.phash.semuxrpc.panels.AccountInfoPanel;
+import de.phash.semuxrpc.panels.SendPanel;
 import de.phash.semuxrpc.panels.ServerPanel;
 import de.phash.semuxrpc.panels.SignPanel;
 import de.phash.semuxrpc.panels.TransferPanel;
@@ -33,9 +34,10 @@ public class MainFrame extends JFrame implements ActionListener {
     private TransferPanel transferPanel;
     private SignPanel signPanel;
     private WalletPanel walletPanel;
+    private SendPanel sendPanel;
     private JButton btnInfo;
     private JButton btnTransfer;
-    private JButton btnVote;
+    private JButton btnSend;
     private JButton btnSign;
     private JButton btnAccount;
     private RPCService rpcService;
@@ -54,6 +56,7 @@ public class MainFrame extends JFrame implements ActionListener {
         transferPanel = new TransferPanel(rpcService);
         signPanel = new SignPanel(rpcService);
         walletPanel = new WalletPanel(rpcService);
+        sendPanel = new SendPanel(rpcService);
 
         JPanel menuPanel = new JPanel();
         GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -78,20 +81,20 @@ public class MainFrame extends JFrame implements ActionListener {
         activeButton = btnInfo;
         btnTransfer = SwingUtil.createDefaultButton("Transfer", this, Action.SHOW_TRANSFER);
 
-        btnVote = SwingUtil.createDefaultButton("vote", this, Action.SHOW_VOTE);
+        btnSend = SwingUtil.createDefaultButton("send", this, Action.SHOW_SEND);
         // btnSign = SwingUtil.createDefaultButton("sign", this, Action.SHOW_SIGN);
         btnAccount = SwingUtil.createDefaultButton("Wallet", this, Action.SHOW_ACC);
 
         GroupLayout glMenuPanel = new GroupLayout(menuPanel);
         glMenuPanel.setHorizontalGroup(glMenuPanel.createParallelGroup(Alignment.LEADING)
                 .addGroup(glMenuPanel.createSequentialGroup().addGap(46).addComponent(btnInfo).addGap(18)
-                        .addComponent(btnTransfer).addGap(18).addComponent(btnAccount).addGap(18).addComponent(btnVote)
+                        .addComponent(btnTransfer).addGap(18).addComponent(btnAccount).addGap(18).addComponent(btnSend)
 
                         .addContainerGap(563, Short.MAX_VALUE)));
         glMenuPanel.setVerticalGroup(glMenuPanel.createParallelGroup(Alignment.LEADING)
                 .addGroup(glMenuPanel.createSequentialGroup().addGap(42)
                         .addGroup(glMenuPanel.createParallelGroup(Alignment.BASELINE).addComponent(btnInfo)
-                                .addComponent(btnTransfer).addComponent(btnAccount).addComponent(btnVote))
+                                .addComponent(btnTransfer).addComponent(btnAccount).addComponent(btnSend))
                         .addContainerGap(43, Short.MAX_VALUE)));
         menuPanel.setLayout(glMenuPanel);
         getContentPane().setLayout(groupLayout);
@@ -141,6 +144,9 @@ public class MainFrame extends JFrame implements ActionListener {
             break;
         case SHOW_ACC:
             select(walletPanel, btnAccount);
+            break;
+        case SHOW_SEND:
+            select(sendPanel, btnSend);
             break;
         default:
             throw new IllegalStateException("No such action");

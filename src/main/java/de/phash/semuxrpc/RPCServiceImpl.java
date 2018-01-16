@@ -14,6 +14,7 @@ import org.semux.crypto.CryptoException;
 import org.semux.crypto.EdDSA;
 import org.semux.crypto.Hash;
 import org.semux.crypto.Hex;
+import org.semux.gui.model.WalletAccount;
 import org.semux.util.Bytes;
 import org.semux.util.IOUtil;
 import org.semux.util.SimpleDecoder;
@@ -65,9 +66,10 @@ public class RPCServiceImpl implements RPCService {
     }
 
     @Override
-    public SendTransactionResponse sendTransaction(Transaction transaction)
+    public SendTransactionResponse sendTransaction(Transaction transaction, WalletAccount account)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException {
-        return getApi(server).sendTransaction(signTransaction(transaction, server.getPrivateKey()));
+        transaction = transaction.sign(account.getKey());
+        return getApi(server).sendTransaction(Hex.encode0x(transaction.toBytes()));
     }
 
     private String signTransaction(Transaction transaction, String privateKey)
@@ -95,5 +97,11 @@ public class RPCServiceImpl implements RPCService {
     public void setServer(Server server) {
         this.server = server;
 
+    }
+
+    @Override
+    public SendTransactionResponse sendTransaction(Transaction transaction)
+            throws IOException, ApiException, InvalidKeySpecException, CryptoException {
+        return getApi(server).sendTransaction(signTransaction(transaction, server.getPrivateKey()));
     }
 }

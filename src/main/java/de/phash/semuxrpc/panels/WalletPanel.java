@@ -69,38 +69,52 @@ public class WalletPanel extends JPanel {
         lblQr.setIcon(SwingUtil.emptyImage(200, 200));
         lblQr.setBorder(new LineBorder(Color.LIGHT_GRAY));
         GroupLayout groupLayout = new GroupLayout(this);
-        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-                .createSequentialGroup()
-                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayout.createSequentialGroup().addGap(115).addComponent(btnRefresh))
-                        .addGroup(groupLayout.createSequentialGroup().addGap(32).addGroup(groupLayout
-                                .createParallelGroup(Alignment.LEADING).addComponent(lblLocked)
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(Alignment.TRAILING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addGap(115)
+                            .addComponent(btnRefresh))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addGap(32)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(lblLocked)
                                 .addGroup(groupLayout.createSequentialGroup()
-                                        .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-                                                .addComponent(lblAddressLabel).addComponent(lblBalance))
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-                                                .addComponent(textFieldAddress).addComponent(textFieldLocked)
-                                                .addComponent(textFieldBalance, GroupLayout.DEFAULT_SIZE, 320,
-                                                        Short.MAX_VALUE)
-                                                .addComponent(lblQr, GroupLayout.PREFERRED_SIZE, 250,
-                                                        GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(40, Short.MAX_VALUE)));
-        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(groupLayout.createSequentialGroup().addGap(24)
-                        .addComponent(lblQr, GroupLayout.PREFERRED_SIZE, 215, GroupLayout.PREFERRED_SIZE).addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblAddressLabel)
-                                .addComponent(textFieldAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                        GroupLayout.PREFERRED_SIZE))
-                        .addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblBalance)
-                                .addComponent(textFieldBalance, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                        GroupLayout.PREFERRED_SIZE))
-                        .addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblLocked)
-                                .addComponent(textFieldLocked, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                        GroupLayout.PREFERRED_SIZE))
-                        .addGap(18).addComponent(btnRefresh).addContainerGap()));
+                                    .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+                                        .addComponent(lblAddressLabel)
+                                        .addComponent(lblBalance))
+                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(textFieldAddress)
+                                        .addComponent(textFieldLocked)
+                                        .addComponent(textFieldBalance, GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                                        .addGroup(groupLayout.createSequentialGroup()
+                                            .addComponent(lblQr, GroupLayout.PREFERRED_SIZE, 200, Short.MAX_VALUE)
+                                            .addGap(120)))))))
+                    .addGap(40))
+        );
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addGap(24)
+                    .addComponent(lblQr, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblAddressLabel)
+                        .addComponent(textFieldAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblBalance)
+                        .addComponent(textFieldBalance, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblLocked)
+                        .addComponent(textFieldLocked, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addComponent(btnRefresh)
+                    .addContainerGap())
+        );
 
         setQRcode();
         setLayout(groupLayout);
