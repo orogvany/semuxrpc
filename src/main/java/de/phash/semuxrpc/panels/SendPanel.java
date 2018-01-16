@@ -52,7 +52,7 @@ public class SendPanel extends JPanel implements ActionListener {
         textFieldAmount = new JTextField();
         textFieldAmount.setColumns(10);
 
-        textFieldFee = new JTextField(Long.toString(rpcService.getConfig().minDelegateFee()));
+        textFieldFee = new JTextField(Long.toString(rpcService.getConfig().minTransactionFee()));
         textFieldFee.setColumns(10);
 
         textFieldData = new JTextField();
