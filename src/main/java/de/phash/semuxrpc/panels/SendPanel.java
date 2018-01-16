@@ -58,9 +58,6 @@ public class SendPanel extends JPanel implements ActionListener {
         textFieldData = new JTextField();
         textFieldData.setColumns(10);
 
-        JButton btnNewButton = SwingUtil.createDefaultButton(GUIMessages.get("Confirm"), this, getSelectedAction());
-        // new JButton("Confirm");//
-
         comboBox = new JComboBox<>();
         // comboBox.setActionCommand(Action.TRANSACTION_TYPE.name());
         // comboBox.addActionListener(this);
@@ -68,6 +65,10 @@ public class SendPanel extends JPanel implements ActionListener {
         comboBox.addItem(TransactionType.VOTE);
         comboBox.addItem(TransactionType.UNVOTE);
         comboBox.setSelectedItem(TransactionType.TRANSFER);
+        
+        JButton btnNewButton = SwingUtil.createDefaultButton(GUIMessages.get("Confirm"), this, getSelectedAction());
+        // new JButton("Confirm");//
+
 
         GroupLayout groupLayout = new GroupLayout(this);
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
