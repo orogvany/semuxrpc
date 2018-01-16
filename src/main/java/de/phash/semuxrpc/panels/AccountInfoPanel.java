@@ -15,6 +15,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semux.swagger.client.model.GetAccountResponse;
 import de.phash.semuxrpc.Action;
+import de.phash.semuxrpc.MainFrame;
+import de.phash.semuxrpc.RPCService;
 import de.phash.semuxrpc.RpcGUI;
 import de.phash.semuxrpc.gui.SwingUtil;
 
@@ -25,12 +27,12 @@ public class AccountInfoPanel extends JPanel implements ActionListener {
     private JTextField textFieldAddress;
     private JTextField textFieldBalance;
     private JTextField textFieldLocked;
-    private RpcGUI rpcGUI;
+    private RPCService rpcService;
     private JTextField textFieldNonce;
 
-    public AccountInfoPanel(RpcGUI rpcGUI) {
+    public AccountInfoPanel(RPCService rpcService) {
         super();
-        this.rpcGUI = rpcGUI;
+        this.rpcService = rpcService;
 
         textFieldAddress = new JTextField();
         textFieldAddress.setText("0x09c5f2794d69717d538bfcc150644f7685945cfa");
@@ -131,7 +133,7 @@ public class AccountInfoPanel extends JPanel implements ActionListener {
             lblResult.setIcon( SwingUtil.loadImage("yellow", 20, 20));
             try {
                 GetAccountResponse info;
-                info = rpcGUI.getAccountInfo(textFieldAddress.getText());
+                info = rpcService.getAccountInfo(textFieldAddress.getText());
                 updateAccountInfo(info); 
                 lblResult.setIcon( SwingUtil.loadImage("green", 20, 20));
             } catch (IOException e1) {

@@ -14,8 +14,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import org.semux.config.Config;
-import org.semux.config.MainNetConfig;
 import org.semux.core.Transaction;
 import org.semux.core.TransactionType;
 import org.semux.crypto.CryptoException;
@@ -24,20 +22,20 @@ import org.semux.util.Bytes;
 
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semuxrpc.Action;
-import de.phash.semuxrpc.RpcGUI;
+import de.phash.semuxrpc.RPCService;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class SignPanel extends JPanel implements ActionListener {
-    Config c = new MainNetConfig("");
+   
     private JTextField textFieldFrom;
     private JTextField textFieldTo;
     private JTextField textFieldAmount;
     private JPasswordField passwordFieldPrivKey;
     private JTextField textFieldData;
-    private RpcGUI rpcGui;
+    private RPCService rpcService;
 
-    public SignPanel(RpcGUI rpcGui) {
-        this.rpcGui = rpcGui;
+    public SignPanel( RPCService rpcService) {
+        this.rpcService = rpcService;
         JLabel lblFrom = new JLabel("from");
 
         JLabel lblTo = new JLabel("to");
@@ -54,7 +52,7 @@ public class SignPanel extends JPanel implements ActionListener {
         textFieldTo = new JTextField("0x09c5f2794d69717d538bfcc150644f7685945cfa");
         textFieldTo.setColumns(30);
 
-        textFieldAmount = new JTextField(c.minTransactionFee() + "");
+        textFieldAmount = new JTextField(rpcService.getConfig().minTransactionFee() + "");
         textFieldAmount.setColumns(30);
 
         passwordFieldPrivKey = new JPasswordField();
@@ -129,15 +127,15 @@ public class SignPanel extends JPanel implements ActionListener {
             try {
 
                 Long value = Long.parseLong(textFieldAmount.getText());
-                Long fee = c.minTransactionFee();
+                Long fee = rpcService.getConfig().minTransactionFee();
                 byte[] to = Hex.decode0x(textFieldTo.getText());
-                Long nonce = rpcGui.getAccountInfo(textFieldFrom.getText()).getResult().getNonce();
+                Long nonce = rpcService.getAccountInfo(textFieldFrom.getText()).getResult().getNonce();
                 Transaction tx = new org.semux.core.Transaction(TransactionType.TRANSFER, to, value, fee,
                         nonce, System.currentTimeMillis(), Bytes.of(textFieldData.getText()));
 
                 // tx.sign(new
                 // EdDSA(Hex.decode0x(String.copyValueOf(passwordFieldPrivKey.getPassword()))));
-                rpcGui.sendTransaction(tx);
+                rpcService.sendTransaction(tx);
             } catch (IOException | InvalidKeySpecException | CryptoException | ApiException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

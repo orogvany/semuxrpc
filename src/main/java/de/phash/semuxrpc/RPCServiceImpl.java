@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.spec.InvalidKeySpecException;
 
+import org.semux.config.Config;
+import org.semux.config.MainNetConfig;
 import org.semux.core.Transaction;
 import org.semux.core.Wallet;
 import org.semux.core.state.Account;
@@ -30,22 +32,22 @@ public class RPCServiceImpl implements RPCService {
     private static final Logger logger = LoggerFactory.getLogger(SwingUtil.class);
 
     private Wallet wallet;
+    private Server server;
 
-    public RPCServiceImpl() {
+    public RPCServiceImpl(Wallet wallet) {
         super();
-        wallet = new Wallet(new File(".", "wallet.dat"));
-        wallet.unlock("");
-        if (wallet.getAccounts() == null || wallet.getAccounts().size() < 1) {
-            EdDSA key = new EdDSA();
-            wallet.addAccount(key);
-            wallet.flush();
-        }
+        this.wallet = wallet;
     }
 
-   
+    Config c = new MainNetConfig("");
 
     @Override
-    public GetAccountResponse getAccountInfo(String address, Server server) throws IOException, ApiException {
+    public Config getConfig() {
+        return c;
+    }
+
+    @Override
+    public GetAccountResponse getAccountInfo(String address) throws IOException, ApiException {
         return getApi(server).getAccount(address);
     }
 
@@ -63,7 +65,7 @@ public class RPCServiceImpl implements RPCService {
     }
 
     @Override
-    public SendTransactionResponse sendTransaction(Transaction transaction, Server server)
+    public SendTransactionResponse sendTransaction(Transaction transaction)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException {
         return getApi(server).sendTransaction(signTransaction(transaction, server.getPrivateKey()));
     }
@@ -83,11 +85,15 @@ public class RPCServiceImpl implements RPCService {
         return wallet.getAccount(0);
     }
 
-
+    @Override
+    public AccountInfo getAccount() throws IOException, ApiException {
+        GetAccountResponse response = getAccountInfo(getSelectedWalletAccount().toAddressString());
+        return new AccountInfo(response.getResult());
+    }
 
     @Override
-    public AccountInfo getAccount(Server server) throws IOException, ApiException {
-        GetAccountResponse response=  getAccountInfo( getSelectedWalletAccount().toAddressString(), server);
-        return new AccountInfo(response.getResult());
+    public void setServer(Server server) {
+        this.server = server;
+
     }
 }

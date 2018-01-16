@@ -1,6 +1,5 @@
 package de.phash.semuxrpc.panels;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 
-import org.semux.core.state.Account;
 import org.semux.crypto.EdDSA;
 import org.semux.gui.SwingUtil;
 import org.semux.gui.exception.QRCodeException;
@@ -25,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semuxrpc.AccountInfo;
+import de.phash.semuxrpc.RPCService;
 import de.phash.semuxrpc.RpcGUI;
 
 public class WalletPanel extends JPanel {
@@ -36,30 +35,31 @@ public class WalletPanel extends JPanel {
     private JTextField textFieldLocked;
     private JLabel lblQr;
     private RpcGUI rpcGUI;
+    private RPCService rpcService;
 
-    public WalletPanel(RpcGUI gui) {
-        this.rpcGUI = gui;
+    public WalletPanel(RPCService service) {
+        this.rpcService = service;
         AccountInfo account = null;
         try {
-            account = rpcGUI.getAccount();
+            account = rpcService.getAccount();
         } catch (IOException | ApiException e) {
             e.printStackTrace();
         }
 
         JLabel lblAddressLabel = new JLabel("Address");
 
-        textFieldAddress = new JTextField(account.getAddress());
+        textFieldAddress = new JTextField(rpcService.getSelectedWalletAccount().toAddressString());// account.getAddress());
         textFieldAddress.setEditable(false);
         textFieldAddress.setColumns(10);
 
         JLabel lblBalance = new JLabel("Balance");
-        textFieldBalance = new JTextField(Long.toString(account.getBalance()));
+        textFieldBalance = new JTextField(account == null ? "" : Long.toString(account.getBalance()));
         textFieldBalance.setEditable(false);
         textFieldBalance.setColumns(10);
 
         JLabel lblLocked = new JLabel("Locked");
 
-        textFieldLocked = new JTextField(Long.toString(account.getLocked()));
+        textFieldLocked = new JTextField(account == null ? "" : Long.toString(account.getLocked()));
         textFieldLocked.setEditable(false);
         textFieldLocked.setColumns(10);
 
@@ -108,8 +108,9 @@ public class WalletPanel extends JPanel {
 
     private void setQRcode() {
         try {
-            EdDSA acc = rpcGUI.getSelectedAccount();
+            EdDSA acc = rpcService.getSelectedWalletAccount();
             if (acc != null) {
+                System.out.println(acc.toAddressString());
                 BufferedImage bi = SwingUtil.generateQR("semux://" + acc.toAddressString(), 200);
                 lblQr.setIcon(new ImageIcon(bi));
             }

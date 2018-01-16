@@ -23,11 +23,11 @@ import org.semux.crypto.Hex;
 import de.phash.semux.swagger.client.ApiException;
 import de.phash.semux.swagger.client.model.SendTransactionResponse;
 import de.phash.semuxrpc.Action;
-import de.phash.semuxrpc.RpcGUI;
+import de.phash.semuxrpc.RPCService;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class TransferPanel extends JPanel implements ActionListener {
-    private RpcGUI rpcGUI;
+    private RPCService rpcService;
 
     private static final long serialVersionUID = 1L;
     private JTextField textFieldFrom;
@@ -38,8 +38,8 @@ public class TransferPanel extends JPanel implements ActionListener {
 
     private JLabel lblResult;
 
-    public TransferPanel(RpcGUI rpcGUI) {
-        this.rpcGUI = rpcGUI;
+    public TransferPanel(RPCService rpcService) {
+        this.rpcService = rpcService;
         JLabel lblFrom = new JLabel("from");
 
         JLabel lblTo = new JLabel("to");
@@ -66,71 +66,48 @@ public class TransferPanel extends JPanel implements ActionListener {
 
         lblResult = new JLabel("");
         GroupLayout groupLayout = new GroupLayout(this);
-        groupLayout.setHorizontalGroup(
-                groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayout.createSequentialGroup()
-                                .addGap(29)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                        .addComponent(lblFrom)
-                                        .addComponent(lblTo)
-                                        .addComponent(lblAmount)
-                                        .addComponent(lblFee)
-                                        .addComponent(lblAutofee))
-                                .addGap(45)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                        .addGroup(groupLayout.createSequentialGroup()
-                                                .addComponent(btnSend)
-                                                .addGap(18)
-                                                .addComponent(lblResult)
-                                                .addGap(215))
+        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
+                .createSequentialGroup().addGap(29)
+                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblFrom).addComponent(lblTo)
+                        .addComponent(lblAmount).addComponent(lblFee).addComponent(lblAutofee))
+                .addGap(45)
+                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup().addComponent(btnSend).addGap(18)
+                                .addComponent(lblResult).addGap(215))
+                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addGroup(groupLayout.createSequentialGroup()
                                         .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                                .addGroup(groupLayout.createSequentialGroup()
-                                                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                                                .addComponent(formattedTextFieldFee,
-                                                                        GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                                                                .addComponent(formattedTextFieldAmount, 315, 315, 315)
-                                                                .addGroup(groupLayout
-                                                                        .createParallelGroup(Alignment.LEADING, false)
-                                                                        .addComponent(textFieldTo)
-                                                                        .addComponent(textFieldFrom,
-                                                                                GroupLayout.DEFAULT_SIZE, 315,
-                                                                                Short.MAX_VALUE)))
-                                                        .addGap(19))
-                                                .addGroup(groupLayout.createSequentialGroup()
-                                                        .addComponent(chckbxAutoFee)
-                                                        .addContainerGap())))));
-        groupLayout.setVerticalGroup(
-                groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayout.createSequentialGroup()
-                                .addGap(28)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(lblFrom)
-                                        .addComponent(textFieldFrom, GroupLayout.PREFERRED_SIZE,
-                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(lblTo)
-                                        .addComponent(textFieldTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                                GroupLayout.PREFERRED_SIZE))
-                                .addGap(18)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(lblAmount)
-                                        .addComponent(formattedTextFieldAmount, GroupLayout.PREFERRED_SIZE,
-                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(lblFee)
-                                        .addComponent(formattedTextFieldFee, GroupLayout.PREFERRED_SIZE,
-                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                        .addComponent(lblAutofee)
-                                        .addComponent(chckbxAutoFee))
-                                .addGap(18)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(btnSend)
-                                        .addComponent(lblResult))
-                                .addContainerGap(58, Short.MAX_VALUE)));
+                                                .addComponent(formattedTextFieldFee, GroupLayout.DEFAULT_SIZE, 315,
+                                                        Short.MAX_VALUE)
+                                                .addComponent(formattedTextFieldAmount, 315, 315, 315)
+                                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+                                                        .addComponent(textFieldTo).addComponent(textFieldFrom,
+                                                                GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)))
+                                        .addGap(19))
+                                .addGroup(groupLayout.createSequentialGroup().addComponent(chckbxAutoFee)
+                                        .addContainerGap())))));
+        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
+                .createSequentialGroup().addGap(28)
+                .addGroup(groupLayout
+                        .createParallelGroup(Alignment.BASELINE).addComponent(lblFrom).addComponent(textFieldFrom,
+                                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGap(18)
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblTo).addComponent(
+                        textFieldTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGap(18)
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblAmount).addComponent(
+                        formattedTextFieldAmount, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE))
+                .addGap(18)
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblFee).addComponent(
+                        formattedTextFieldFee, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE))
+                .addGap(18)
+                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblAutofee)
+                        .addComponent(chckbxAutoFee))
+                .addGap(18).addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(btnSend)
+                        .addComponent(lblResult))
+                .addContainerGap(58, Short.MAX_VALUE)));
         setLayout(groupLayout);
     }
 
@@ -149,10 +126,10 @@ public class TransferPanel extends JPanel implements ActionListener {
                 Long fee = c.minTransactionFee();
                 byte[] to = Hex.decode0x(textFieldTo.getText());
                 byte[] data = Hex.decode0x("");
-                Long nonce = rpcGUI.getAccountInfo(textFieldFrom.getText()).getResult().getNonce();
+                Long nonce = rpcService.getAccountInfo(textFieldFrom.getText()).getResult().getNonce();
                 Transaction transaction = new Transaction(TransactionType.TRANSFER, to, amount, fee, nonce,
                         System.currentTimeMillis(), data);
-                SendTransactionResponse result = rpcGUI.sendTransaction(transaction);
+                SendTransactionResponse result = rpcService.sendTransaction(transaction);
 
                 lblResult.setIcon(SwingUtil.loadImage("green", 20, 20));
             } catch (IOException | InvalidKeySpecException | CryptoException | ApiException e1) {
