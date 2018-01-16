@@ -66,54 +66,68 @@ public class SendPanel extends JPanel implements ActionListener {
         comboBox.addItem(TransactionType.UNVOTE);
         comboBox.setSelectedItem(TransactionType.TRANSFER);
         
-        JButton btnNewButton = SwingUtil.createDefaultButton(GUIMessages.get("Confirm"), this, getSelectedAction());
+        JButton btnNewButton= SwingUtil.createDefaultButton(GUIMessages.get("Confirm"), this, getSelectedAction());
         // new JButton("Confirm");//
 
 
         GroupLayout groupLayout = new GroupLayout(this);
-        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-                .createSequentialGroup().addGap(53)
-                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-                        .createSequentialGroup()
-                        .addGroup(groupLayout
-                                .createParallelGroup(Alignment.LEADING).addComponent(lblFrom).addComponent(lblTo))
-                        .addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(textFieldTo)
-                                .addComponent(textFieldFrom))
-                        .addGap(1))
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addGap(53)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
-                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblAmount)
-                                        .addComponent(lblFee).addComponent(lblData))
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(textFieldData)
-                                        .addComponent(textFieldFee).addComponent(textFieldAmount)
-                                        .addComponent(btnNewButton).addComponent(comboBox, 0, 116, Short.MAX_VALUE))))
-                .addGap(232)));
-        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-                .createSequentialGroup().addGap(35)
-                .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-                        .addComponent(textFieldFrom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                GroupLayout.PREFERRED_SIZE)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(lblFrom)
+                                .addComponent(lblTo))
+                            .addGap(18)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                                .addComponent(textFieldFrom, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                            .addGap(1))
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(lblAmount)
+                                .addComponent(lblFee)
+                                .addComponent(lblData))
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(textFieldFee, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                .addComponent(textFieldAmount, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                .addComponent(btnNewButton)
+                                .addComponent(comboBox, 0, 124, Short.MAX_VALUE)
+                                .addComponent(textFieldData, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE))))
+                    .addGap(50))
+        );
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addGap(35)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+                        .addComponent(textFieldFrom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblFrom))
-                .addGap(18)
-                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblTo).addComponent(
-                        textFieldTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(18)
-                .addGroup(groupLayout
-                        .createParallelGroup(Alignment.BASELINE).addComponent(lblAmount).addComponent(textFieldAmount,
-                                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(18)
-                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblFee).addComponent(
-                        textFieldFee, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(18)
-                .addGroup(groupLayout
-                        .createParallelGroup(Alignment.BASELINE).addComponent(lblData).addComponent(textFieldData,
-                                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(ComponentPlacement.UNRELATED)
-                .addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                        GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE).addComponent(btnNewButton)
-                .addContainerGap()));
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblTo)
+                        .addComponent(textFieldTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblAmount)
+                        .addComponent(textFieldAmount, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblFee)
+                        .addComponent(textFieldFee, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblData)
+                        .addComponent(textFieldData, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                    .addComponent(btnNewButton)
+                    .addContainerGap())
+        );
         setLayout(groupLayout);
     }
 
@@ -142,8 +156,8 @@ public class SendPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        Action action = Action.valueOf(event.getActionCommand());
-
+    //    Action action = Action.valueOf(event.getActionCommand());
+        Action action =getSelectedAction();
         switch (action) {
         case TRANSFER:
             // lblResult.setIcon(SwingUtil.loadImage("yellow", 20, 20));
@@ -186,7 +200,7 @@ public class SendPanel extends JPanel implements ActionListener {
         byte[] data = Hex.decode0x("");
         Long nonce = rpcService.getAccountInfo(textFieldFrom.getText()).getResult().getNonce();
         Transaction transaction = new Transaction(type, to, amount, fee, nonce, System.currentTimeMillis(), data);
-        SendTransactionResponse result = rpcService.sendTransaction(transaction);
+        SendTransactionResponse result = rpcService.sendTransaction(transaction, rpcService.getSelectedWalletAccount());
 
         // lblResult.setIcon(SwingUtil.loadImage("green", 20, 20));
     }

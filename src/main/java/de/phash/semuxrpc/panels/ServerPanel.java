@@ -37,7 +37,7 @@ public class ServerPanel extends JPanel {
         JLabel lblServer = new JLabel("Server");
 
         textFieldServer = new JTextField();
-        textFieldServer.setText("http://127.0.0.1");
+        textFieldServer.setText("http://192.168.178.52");
         textFieldServer.setColumns(10);
         textFieldServer.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             updateServer();

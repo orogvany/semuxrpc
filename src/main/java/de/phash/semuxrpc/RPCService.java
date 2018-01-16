@@ -34,4 +34,6 @@ public interface RPCService {
     SendTransactionResponse sendTransaction(Transaction transaction, WalletAccount account)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException;
 
+    SendTransactionResponse sendTransaction(Transaction transaction, EdDSA selectedWalletAccount) throws ApiException;
+
 }

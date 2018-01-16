@@ -104,4 +104,10 @@ public class RPCServiceImpl implements RPCService {
             throws IOException, ApiException, InvalidKeySpecException, CryptoException {
         return getApi(server).sendTransaction(signTransaction(transaction, server.getPrivateKey()));
     }
+
+    @Override
+    public SendTransactionResponse sendTransaction(Transaction transaction, EdDSA selectedWalletAccount) throws ApiException {
+        transaction.sign(selectedWalletAccount);
+        return getApi(server).sendTransaction(Hex.encode0x(transaction.toBytes()));
+    }
 }

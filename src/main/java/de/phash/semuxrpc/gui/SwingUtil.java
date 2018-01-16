@@ -19,6 +19,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,6 +32,13 @@ import javax.swing.table.TableColumnModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import de.phash.semuxrpc.Action;
 
@@ -54,7 +63,41 @@ public class SwingUtil {
         frame.setLocation(x, y);
         frame.setBounds(x, y, width, height);
     }
+    /**
+     * Generate an QR image for the given text.
+     * 
+     * @param text
+     * @param width
+     * @param height
+     * @return
+     * @throws WriterException
+     */
+    public static BufferedImage createQrImage(String text, int width, int height) throws WriterException {
+        Map<EncodeHintType, Object> hintMap = new EnumMap<>(EncodeHintType.class);
+        hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        hintMap.put(EncodeHintType.MARGIN, 2);
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, width, height, hintMap);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        image.createGraphics();
+
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, width, height);
+        graphics.setColor(Color.BLACK);
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < width; j++) {
+                if (matrix.get(i, j)) {
+                    graphics.fillRect(i, j, 1, 1);
+                }
+            }
+        }
+
+        return image;
+    }
     /**
      * Load an ImageIcon from resource, and rescale it.
      * 
