@@ -10,18 +10,17 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import de.phash.semuxrpc.gui.SwingUtil;
 import de.phash.semuxrpc.panels.AccountInfoPanel;
 import de.phash.semuxrpc.panels.SendPanel;
-import de.phash.semuxrpc.panels.ServerPanel;
+import de.phash.semuxrpc.panels.ServerDialog;
 import de.phash.semuxrpc.panels.SignPanel;
 import de.phash.semuxrpc.panels.TransferPanel;
 import de.phash.semuxrpc.panels.WalletPanel;
@@ -29,7 +28,7 @@ import de.phash.semuxrpc.panels.WalletPanel;
 public class MainFrame extends JFrame implements ActionListener {
     private JPanel activePanel = new JPanel();
     private JButton activeButton = new JButton();
-    private ServerPanel serverPanel;
+ //   private ServerPanel serverPanel;
     private AccountInfoPanel accountInfoPanel;
     private TransferPanel transferPanel;
     private SignPanel signPanel;
@@ -49,9 +48,8 @@ public class MainFrame extends JFrame implements ActionListener {
         this.setMinimumSize(new Dimension(900, 600));
         activePanel.setBorder(new EmptyBorder(0, 15, 15, 15));
         activePanel.setLayout(new BorderLayout(0, 0));
-        activePanel.add(new AccountInfoPanel(rpcService));
-
-        serverPanel = new ServerPanel(rpcService);
+        menuBar = new MyMenuBar(rpcService,this);
+      //  serverPanel = new ServerPanel(rpcService);
         accountInfoPanel = new AccountInfoPanel(rpcService);
         transferPanel = new TransferPanel(rpcService);
         signPanel = new SignPanel(rpcService);
@@ -60,30 +58,33 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPanel = new JPanel();
         GroupLayout groupLayout = new GroupLayout(getContentPane());
-        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-                .createSequentialGroup().addContainerGap()
-                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayout.createSequentialGroup()
-                                .addComponent(serverPanel, GroupLayout.PREFERRED_SIZE, 257, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(activePanel, GroupLayout.PREFERRED_SIZE, 612, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(menuPanel, GroupLayout.PREFERRED_SIZE, 858, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap()));
-        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
                 .addGroup(groupLayout.createSequentialGroup()
-                        .addComponent(menuPanel, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE).addGap(5)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(serverPanel, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(activePanel, GroupLayout.PREFERRED_SIZE, 448, GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                    .addContainerGap()
+                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(activePanel, GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)
+                        .addComponent(menuPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(75))
+        );
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addComponent(menuPanel, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+                    .addGap(5)
+                    .addComponent(activePanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(15, Short.MAX_VALUE))
+        );
+        AccountInfoPanel accountInfoPanel_1 = new AccountInfoPanel(rpcService);
+        activePanel.add(accountInfoPanel_1, BorderLayout.CENTER);
 
-        btnInfo = SwingUtil.createDefaultButton("Account Info", this, Action.SHOW_ACCOUNTINFO);
+        btnInfo = new JButton(); // SwingUtil.createDefaultButton("Account Info", this, Action.SHOW_ACCOUNTINFO);
         activeButton = btnInfo;
-        btnTransfer = SwingUtil.createDefaultButton("Transfer", this, Action.SHOW_TRANSFER);
+        btnTransfer = new JButton(); //SwingUtil.createDefaultButton("Transfer", this, Action.SHOW_TRANSFER);
 
-        btnSend = SwingUtil.createDefaultButton("send", this, Action.SHOW_SEND);
+        btnSend = new JButton(); //SwingUtil.createDefaultButton("send", this, Action.SHOW_SEND);
         // btnSign = SwingUtil.createDefaultButton("sign", this, Action.SHOW_SIGN);
-        btnAccount = SwingUtil.createDefaultButton("Wallet", this, Action.SHOW_ACC);
+        btnAccount = new JButton(); //SwingUtil.createDefaultButton("Wallet", this, Action.SHOW_ACC);
 
         GroupLayout glMenuPanel = new GroupLayout(menuPanel);
         glMenuPanel.setHorizontalGroup(glMenuPanel.createParallelGroup(Alignment.LEADING)
@@ -98,7 +99,9 @@ public class MainFrame extends JFrame implements ActionListener {
                         .addContainerGap(43, Short.MAX_VALUE)));
         menuPanel.setLayout(glMenuPanel);
         getContentPane().setLayout(groupLayout);
-
+      
+      
+        setJMenuBar(menuBar);
         activePanel.revalidate();
         activePanel.repaint();
     }
@@ -109,6 +112,8 @@ public class MainFrame extends JFrame implements ActionListener {
             new EmptyBorder(0, 5, 0, 10));
     private static final Border BORDER_FOCUS = new CompoundBorder(new LineBorder(new Color(51, 153, 255)),
             new EmptyBorder(0, 5, 0, 10));
+    private JMenuBar menuBar;
+  
 
     protected void select(JPanel panel, JButton button) {
         if (activeButton != null) {
@@ -122,10 +127,6 @@ public class MainFrame extends JFrame implements ActionListener {
 
         activePanel.revalidate();
         activePanel.repaint();
-    }
-
-    private Server getServer() {
-        return serverPanel.getServer();
     }
 
     @Override

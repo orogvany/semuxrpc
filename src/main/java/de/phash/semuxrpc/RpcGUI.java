@@ -12,6 +12,9 @@ import org.semux.crypto.Hex;
 import org.semux.message.GUIMessages;
 import org.semux.util.SystemUtil;
 
+import de.phash.semuxrpc.panels.ServerDialog;
+import de.phash.semuxrpc.panels.ServerPanel;
+
 public class RpcGUI {
 
     private static final long serialVersionUID = 1L;
@@ -70,6 +73,7 @@ public class RpcGUI {
             wallet.flush();
         }
         rpcService = new RPCServiceImpl(wallet);
+        
         // start main frame
         EventQueue.invokeLater(() -> {
             MainFrame frame = new MainFrame(this, rpcService);
