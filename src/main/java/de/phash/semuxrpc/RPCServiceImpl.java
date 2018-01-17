@@ -13,6 +13,7 @@ import org.semux.crypto.CryptoException;
 import org.semux.crypto.EdDSA;
 import org.semux.crypto.Hex;
 import org.semux.gui.model.WalletAccount;
+import org.semux.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,15 +138,16 @@ public class RPCServiceImpl implements RPCService {
     public SendTransactionResponse sendTransactionRaw(TransactionType transfer, String toAddr, Long amount,
             String dataString, String privateKey)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException {
-        Long nonce = getAccountInfo(selectedAccount.toAddressString()).getResult().getNonce();
+        EdDSA acc = new EdDSA(Hex.decode0x(privateKey));
+        Long nonce = getAccountInfo(acc.toAddressString()).getResult().getNonce();
         byte[] to = Hex.decode0x(toAddr);
-        byte[] data = Hex.decode0x(dataString);
+        byte[] data = Bytes.of(dataString);
         Long fee = getConfig().minTransactionFee();
         Transaction transaction = new Transaction(TransactionType.TRANSFER, to, amount, fee, nonce,
                 System.currentTimeMillis(), data);
-        return getApi(server).sendTransaction(signTransaction(transaction, privateKey));
+        //String raw = signTransaction(transaction, privateKey);
+        return sendTransaction(transaction, acc);
+        //return getApi(server).sendTransaction(raw);
     }
-
-   
 
 }
