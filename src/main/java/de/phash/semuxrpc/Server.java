@@ -9,6 +9,10 @@ public class Server implements Serializable {
     private String serverPort;
     private String rpcUser;
     private String password;
+    public static final String SERVERADDRESS = "server";
+    public static final String PORT = "port";
+    public static final String RPCUSER = "rpcuser";
+    public static final String RPCPASSWORD = "rpcpassword";
 
     public String getServerAddress() {
         return serverAddress;

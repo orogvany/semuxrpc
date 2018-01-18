@@ -1,5 +1,12 @@
 package de.phash.semuxrpc.panels;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JFormattedTextField;
@@ -15,11 +22,16 @@ import de.phash.semuxrpc.SimpleDocumentListener;
 import de.phash.semuxrpc.gui.GUIMessages;
 
 public class ServerPanel extends JPanel {
+
     private static final long serialVersionUID = 1L;
+    Server propertiesServer;
 
     public Server getServer() {
-        return new Server(textFieldServer.getText(), textFieldPort.getText(), textFieldRPCUser.getText(),
-                String.copyValueOf(passwordField.getPassword()));
+        return propertiesServer;
+        /*
+         * new Server(textFieldServer.getText(), textFieldPort.getText(),
+         * textFieldRPCUser.getText(), String.copyValueOf(passwordField.getPassword()));
+         */
     }
 
     private JTextField textFieldServer;
@@ -30,11 +42,12 @@ public class ServerPanel extends JPanel {
 
     public ServerPanel(RPCService rpcService) {
         super();
+        getServerFromProperties();
         this.rpcService = rpcService;
         JLabel lblServer = new JLabel(GUIMessages.get("Server"));
 
         textFieldServer = new JTextField();
-        textFieldServer.setText("http://192.168.178.52");
+        textFieldServer.setText(propertiesServer.getServerAddress());
         textFieldServer.setColumns(10);
         textFieldServer.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             updateServer();
@@ -42,7 +55,7 @@ public class ServerPanel extends JPanel {
         JLabel lblPort = new JLabel(GUIMessages.get("Port"));
 
         textFieldPort = new JFormattedTextField();
-        textFieldPort.setText("5171");
+        textFieldPort.setText(propertiesServer.getServerPort());
         textFieldPort.setColumns(10);
         textFieldServer.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             updateServer();
@@ -50,14 +63,14 @@ public class ServerPanel extends JPanel {
         JLabel lblRPCUser = new JLabel(GUIMessages.get("RPCUser"));
 
         textFieldRPCUser = new JTextField();
-        textFieldRPCUser.setText("phash");
+        textFieldRPCUser.setText(propertiesServer.getRpcUser());
         textFieldRPCUser.setColumns(10);
         textFieldRPCUser.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             updateServer();
         });
         JLabel lblRpcPass = new JLabel(GUIMessages.get("RPCPass"));
 
-        passwordField = new JPasswordField("x");
+        passwordField = new JPasswordField(propertiesServer.getPassword());
         passwordField.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             updateServer();
         });
@@ -98,7 +111,75 @@ public class ServerPanel extends JPanel {
         rpcService.setServer(this.getServer());
     }
 
+    private void getServerFromProperties() {
+        Properties prop = new Properties();
+        InputStream input = null;
+        if (propertiesServer == null)
+            propertiesServer = new Server("http://127.0.0.1", "5171", "user", "pass");
+        try {
+
+            input = new FileInputStream("server.properties");
+
+            // load a properties file
+            prop.load(input);
+
+            propertiesServer = new Server(prop.getProperty(Server.SERVERADDRESS), prop.getProperty(Server.PORT),
+                    prop.getProperty(Server.RPCUSER), prop.getProperty(Server.RPCPASSWORD));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
     private void updateServer() {
+        writeServerFile();
         rpcService.setServer(getServer());
+    }
+
+    private void writeServerFile() {
+        Properties prop = new Properties();
+        OutputStream output = null;
+
+        try {
+            if (propertiesServer == null)
+                propertiesServer = new Server("http://127.0.0.1", "5171", "user", "pass");
+            output = new FileOutputStream("server.properties");
+
+            
+            propertiesServer.setPassword(String.copyValueOf( passwordField.getPassword()));
+            propertiesServer.setServerAddress(textFieldServer.getText());
+            propertiesServer.setRpcUser(textFieldRPCUser.getText());
+            propertiesServer.setServerPort(textFieldPort.getText());
+            
+            // set the properties value
+            prop.setProperty(Server.SERVERADDRESS, propertiesServer.getServerAddress());
+            prop.setProperty(Server.PORT, propertiesServer.getServerPort());
+            prop.setProperty(Server.RPCUSER, propertiesServer.getRpcUser());
+            prop.setProperty(Server.RPCPASSWORD, propertiesServer.getPassword());
+
+            // save properties to project root folder
+            prop.store(output, null);
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
     }
 }

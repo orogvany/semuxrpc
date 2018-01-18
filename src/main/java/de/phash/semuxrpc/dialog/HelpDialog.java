@@ -21,6 +21,7 @@ public class HelpDialog extends JDialog {
         JLabel lblBanner = new JLabel("");
         lblBanner.setIcon(SwingUtil.loadImage("banner", 125, 200));
         getContentPane().add(lblBanner, BorderLayout.WEST);
+        
     }
 
 }
