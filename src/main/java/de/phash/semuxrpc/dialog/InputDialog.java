@@ -4,7 +4,7 @@
  * Distributed under the MIT software license, see the accompanying file
  * LICENSE or https://opensource.org/licenses/mit-license.php
  */
-package de.phash.semuxrpc;
+package de.phash.semuxrpc.dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

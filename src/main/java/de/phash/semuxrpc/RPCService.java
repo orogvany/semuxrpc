@@ -7,6 +7,7 @@ import java.util.List;
 import org.semux.config.Config;
 import org.semux.core.Transaction;
 import org.semux.core.TransactionType;
+import org.semux.core.Wallet;
 import org.semux.crypto.CryptoException;
 import org.semux.crypto.EdDSA;
 import org.semux.gui.model.WalletAccount;
@@ -19,7 +20,6 @@ public interface RPCService {
 
     GetAccountResponse getAccountInfo(String address) throws IOException, ApiException;
 
-    SendTransactionResponse sendTransaction(Transaction transaction) throws IOException, ApiException, InvalidKeySpecException, CryptoException;
 
     EdDSA getSelectedWalletAccount();
 
@@ -47,6 +47,10 @@ public interface RPCService {
 
     SendTransactionResponse sendTransactionRaw(TransactionType transfer, String toAddr, Long amount, String dataString,
             String privateKey) throws IOException, ApiException, InvalidKeySpecException, CryptoException;
+
+
+    Wallet getWallet();
+
 
 
 }

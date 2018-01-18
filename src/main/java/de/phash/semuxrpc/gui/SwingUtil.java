@@ -30,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
+import org.semux.core.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,7 @@ public class SwingUtil {
         frame.setLocation(x, y);
         frame.setBounds(x, y, width, height);
     }
+
     /**
      * Generate an QR image for the given text.
      * 
@@ -98,6 +100,7 @@ public class SwingUtil {
 
         return image;
     }
+
     /**
      * Load an ImageIcon from resource, and rescale it.
      * 
@@ -186,6 +189,27 @@ public class SwingUtil {
     }
 
     /**
+     * Formats a Semux value.
+     * 
+     * @param nano
+     * @param withUnit
+     * @return
+     */
+    public static String formatValue(long nano, boolean withUnit) {
+        return formatNumber(nano / (double) Unit.SEM, 2) + (withUnit ? " SEM" : "");
+    }
+
+    /**
+     * Formats a Semux value.
+     * 
+     * @param nano
+     * @return
+     */
+    public static String formatValue(long nano) {
+        return formatValue(nano, true);
+    }
+
+    /**
      * 
      * 
      * /** Formats a number as a localized string.
@@ -211,8 +235,6 @@ public class SwingUtil {
     public static String formatNumber(Number number) {
         return formatNumber(number, 0);
     }
-
-    
 
     /**
      * Formats a percentage

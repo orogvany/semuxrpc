@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.semux.config.Config;
 import org.semux.config.MainNetConfig;
 import org.semux.core.Transaction;
@@ -104,11 +105,7 @@ public class RPCServiceImpl implements RPCService {
 
     }
 
-    @Override
-    public SendTransactionResponse sendTransaction(Transaction transaction)
-            throws IOException, ApiException, InvalidKeySpecException, CryptoException {
-        return getApi(server).sendTransaction(signTransaction(transaction, server.getPrivateKey()));
-    }
+    
 
     @Override
     public SendTransactionResponse sendTransaction(Transaction transaction, EdDSA selectedWalletAccount)
@@ -141,6 +138,9 @@ public class RPCServiceImpl implements RPCService {
         EdDSA acc = new EdDSA(Hex.decode0x(privateKey));
         Long nonce = getAccountInfo(acc.toAddressString()).getResult().getNonce();
         byte[] to = Hex.decode0x(toAddr);
+        if (StringUtils.isEmpty(dataString )) {
+            dataString = "";
+        }
         byte[] data = Bytes.of(dataString);
         Long fee = getConfig().minTransactionFee();
         Transaction transaction = new Transaction(TransactionType.TRANSFER, to, amount, fee, nonce,
@@ -150,4 +150,5 @@ public class RPCServiceImpl implements RPCService {
         //return getApi(server).sendTransaction(raw);
     }
 
+  
 }

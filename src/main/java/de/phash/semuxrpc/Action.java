@@ -45,5 +45,5 @@ public enum Action {
     
     IMPORT_PRIVATE_KEY, 
     
-    SHOWSERVER
+    SHOW_SERVER, EXPORTPRIVATEKEY
 }

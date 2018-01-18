@@ -17,11 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import org.semux.core.Transaction;
 import org.semux.core.TransactionType;
 import org.semux.crypto.CryptoException;
 import org.semux.crypto.EdDSA;
-import org.semux.crypto.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,15 +39,15 @@ public class SendPanel extends JPanel implements ActionListener {
     public SendPanel(RPCService rpcService) {
         this.rpcService = rpcService;
 
-        JLabel lblFrom = new JLabel("From");
+        JLabel lblFrom = new JLabel(GUIMessages.get("From"));
 
-        JLabel lblTo = new JLabel("To");
+        JLabel lblTo = new JLabel(GUIMessages.get("To"));
 
-        JLabel lblAmount = new JLabel("Amount");
+        JLabel lblAmount = new JLabel(GUIMessages.get("Amount"));
 
-        JLabel lblFee = new JLabel("Fee");
+        JLabel lblFee = new JLabel(GUIMessages.get("Fee"));
 
-        JLabel lblData = new JLabel("Data");
+        JLabel lblData = new JLabel(GUIMessages.get("Data"));
 
         textFieldTo = new JTextField();
         textFieldTo.setColumns(10);
@@ -64,8 +62,6 @@ public class SendPanel extends JPanel implements ActionListener {
         textFieldData.setColumns(10);
 
         comboBoxTransactionType = new JComboBox<>();
-        // comboBox.setActionCommand(Action.TRANSACTION_TYPE.name());
-        // comboBox.addActionListener(this);
         comboBoxTransactionType.addItem(TransactionType.TRANSFER);
         comboBoxTransactionType.addItem(TransactionType.VOTE);
         comboBoxTransactionType.addItem(TransactionType.UNVOTE);
@@ -78,14 +74,13 @@ public class SendPanel extends JPanel implements ActionListener {
                 if (event.getStateChange() == ItemEvent.SELECTED) {
                     Object item = event.getItem();
                     transactionType = (TransactionType) item;
-                    logger.info("transaction type changed to: " + transactionType.name());
-                    // rpcService.setSelectedWalletAccount((EdDSA) item);
                 }
             }
         });
 
-        JButton btnNewButton = SwingUtil.createDefaultButton(GUIMessages.get("Confirm"), this, getSelectedAction());
-        // new JButton("Confirm");//
+        JButton btnConfirm = new JButton(GUIMessages.get("Confirm"));
+        btnConfirm.addActionListener(this);
+        btnConfirm.setActionCommand(Action.OK.name());
 
         JComboBox<EdDSA> accountss = new JComboBox<>();
         for (EdDSA ele : rpcService.getAccounts()) {
@@ -110,70 +105,69 @@ public class SendPanel extends JPanel implements ActionListener {
 
         lblResult = new JLabel("");
 
+        JLabel lblTransactionType = new JLabel(GUIMessages.get("Type"));
+
         GroupLayout groupLayout = new GroupLayout(this);
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
                 .createSequentialGroup().addGap(53)
-                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-                        .createSequentialGroup()
-                        .addGroup(groupLayout
-                                .createParallelGroup(Alignment.LEADING).addComponent(lblFrom).addComponent(lblTo))
-                        .addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(accountss, 0, 306, Short.MAX_VALUE)
-                                .addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
-                        .addGap(1))
+                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+                                .addComponent(lblTo, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblFrom, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(lblAmount)
-                                        .addComponent(lblFee).addComponent(lblData))
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                        .addComponent(textFieldFee, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                                        .addComponent(textFieldAmount, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                                        .addGroup(groupLayout.createSequentialGroup().addComponent(btnNewButton)
-                                                .addGap(44).addComponent(lblResult))
-                                        .addComponent(comboBoxTransactionType, 0, 306, Short.MAX_VALUE)
-                                        .addComponent(textFieldData, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))))
+                                        .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+                                                .addComponent(lblData, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+                                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(lblFee, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 65,
+                                                        Short.MAX_VALUE)))
+                                .addGap(39))
+                        .addComponent(lblTransactionType))
+                .addGap(23)
+                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup().addGap(119).addComponent(lblResult))
+                        .addComponent(comboBoxTransactionType, 0, 248, Short.MAX_VALUE).addComponent(btnConfirm)
+                        .addComponent(textFieldAmount, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 248,
+                                Short.MAX_VALUE)
+                        .addComponent(textFieldFee, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                        .addComponent(textFieldData, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                        .addComponent(textFieldTo, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                        .addComponent(accountss, 0, 378, Short.MAX_VALUE))
                 .addGap(42)));
         groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
                 .createSequentialGroup().addGap(41)
-                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblFrom).addComponent(
-                        accountss, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(accountss, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblFrom))
                 .addGap(18)
-                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblTo).addComponent(
-                        textFieldTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textFieldTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTo))
                 .addGap(18)
-                .addGroup(groupLayout
-                        .createParallelGroup(Alignment.BASELINE).addComponent(lblAmount).addComponent(textFieldAmount,
-                                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textFieldAmount, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblAmount))
                 .addGap(18)
-                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblFee).addComponent(
-                        textFieldFee, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textFieldFee, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblFee))
                 .addGap(18)
-                .addGroup(groupLayout
-                        .createParallelGroup(Alignment.BASELINE).addComponent(lblData).addComponent(textFieldData,
-                                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textFieldData, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblData))
                 .addPreferredGap(ComponentPlacement.UNRELATED)
-                .addComponent(comboBoxTransactionType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                        GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED, 154, Short.MAX_VALUE).addGroup(groupLayout
-                        .createParallelGroup(Alignment.BASELINE).addComponent(btnNewButton).addComponent(lblResult))
-                .addContainerGap()));
+                .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(comboBoxTransactionType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTransactionType))
+                .addGap(18).addComponent(btnConfirm).addPreferredGap(ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addComponent(lblResult).addContainerGap()));
         setLayout(groupLayout);
-    }
-
-    private Action getSelectedAction() {
-        TransactionType type = (TransactionType) comboBoxTransactionType.getSelectedItem();
-        switch (type) {
-        case TRANSFER:
-            return Action.TRANSFER;
-        case VOTE:
-            return Action.VOTE;
-        case UNVOTE:
-            return Action.UNVOTE;
-
-        default:
-            throw new IllegalStateException();
-        }
     }
 
     private static final long serialVersionUID = 1L;
@@ -186,13 +180,17 @@ public class SendPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         lblResult.setIcon(SwingUtil.loadImage("yellow", 20, 20));
-        // Action action = Action.valueOf(event.getActionCommand());
-        Action action = getSelectedAction();
+        Action action = Action.valueOf(event.getActionCommand());
         switch (action) {
-        case TRANSFER:
-        case VOTE:
-        case UNVOTE:
+        case OK:
             try {
+                Long amount = Long.parseLong(textFieldAmount.getText());
+                int ret = JOptionPane.showConfirmDialog(this,
+                        GUIMessages.get("TransferInfo", SwingUtil.formatValue(amount), textFieldTo.getText()),
+                        GUIMessages.get("ConfirmTransfer"), JOptionPane.YES_NO_OPTION);
+                if (ret != JOptionPane.YES_OPTION) {
+                    break;
+                }
                 prepareTransaction();
             } catch (IOException | InvalidKeySpecException | CryptoException | ApiException e1) {
                 e1.printStackTrace();

@@ -9,52 +9,52 @@ public class Server implements Serializable {
     private String serverPort;
     private String rpcUser;
     private String password;
-    private String privateKey;
-    
-    public String getPrivateKey() {
-        return privateKey;
-    }
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
+
     public String getServerAddress() {
         return serverAddress;
     }
+
     public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress;
     }
+
     public String getServerPort() {
         return serverPort;
     }
+
     public void setServerPort(String serverPort) {
         this.serverPort = serverPort;
     }
+
     public String getRpcUser() {
         return rpcUser;
     }
+
     public void setRpcUser(String rpcUser) {
         this.rpcUser = rpcUser;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     /**
      * @param serverAddress
      * @param serverPort
      * @param rpcUser
      * @param password
-     * @param privateKey 
+     * @param privateKey
      */
-    public Server(String serverAddress, String serverPort, String rpcUser, String password, String privateKey) {
+    public Server(String serverAddress, String serverPort, String rpcUser, String password) {
         super();
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.rpcUser = rpcUser;
         this.password = password;
-        this.privateKey = privateKey;
     }
 
 }

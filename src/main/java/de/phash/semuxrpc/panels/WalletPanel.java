@@ -50,69 +50,83 @@ public class WalletPanel extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-        JLabel lblAddressLabel = new JLabel("Address");
+        JLabel lblAddressLabel = new JLabel(GUIMessages.get("Address"));
 
-        textFieldAddress = new JTextField(rpcService.getSelectedWalletAccount().toAddressString());// account.getAddress());
+        textFieldAddress = new JTextField(rpcService.getSelectedWalletAccount().toAddressString());
         textFieldAddress.setEditable(false);
         textFieldAddress.setColumns(10);
 
-        JLabel lblBalance = new JLabel("Balance");
+        JLabel lblBalance = new JLabel(GUIMessages.get("Balance"));
         textFieldBalance = new JTextField("");
         textFieldBalance.setEditable(false);
         textFieldBalance.setColumns(10);
 
-        JLabel lblLocked = new JLabel("Locked");
+        JLabel lblLocked = new JLabel(GUIMessages.get("Locked"));
         textFieldLocked = new JTextField();
         textFieldLocked.setEditable(false);
         textFieldLocked.setColumns(10);
 
-        JButton btnRefresh = SwingUtil.createDefaultButton(GUIMessages.get("Refresh"), this, Action.REFRESH);
+        JButton btnRefresh = new JButton(GUIMessages.get("Refresh"));
+        btnRefresh.addActionListener(this);
+        btnRefresh.setActionCommand(Action.REFRESH.name());
 
         lblQr = new JLabel("");
         lblQr.setIcon(SwingUtil.emptyImage(200, 200));
         lblQr.setBorder(new LineBorder(Color.LIGHT_GRAY));
         GroupLayout groupLayout = new GroupLayout(this);
-        groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-                .createSequentialGroup()
-                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(groupLayout.createSequentialGroup().addGap(115).addComponent(btnRefresh))
-                        .addGroup(groupLayout.createSequentialGroup().addGap(32).addGroup(groupLayout
-                                .createParallelGroup(Alignment.LEADING).addComponent(lblLocked)
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(Alignment.TRAILING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addGap(32)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(lblLocked)
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+                                .addComponent(lblAddressLabel)
+                                .addComponent(lblBalance))
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(textFieldBalance, GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
                                 .addGroup(groupLayout.createSequentialGroup()
-                                        .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-                                                .addComponent(lblAddressLabel).addComponent(lblBalance))
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                                .addComponent(textFieldAddress).addComponent(textFieldLocked)
-                                                .addComponent(textFieldBalance, GroupLayout.DEFAULT_SIZE, 320,
-                                                        Short.MAX_VALUE)
-                                                .addGroup(groupLayout
-                                                        .createSequentialGroup().addComponent(lblQr,
-                                                                GroupLayout.PREFERRED_SIZE, 200, Short.MAX_VALUE)
-                                                        .addGap(120)))))))
-                .addGap(40)));
-        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                .addGroup(groupLayout.createSequentialGroup().addGap(24)
-                        .addComponent(lblQr, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE).addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblAddressLabel)
-                                .addComponent(textFieldAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                        GroupLayout.PREFERRED_SIZE))
-                        .addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblBalance)
-                                .addComponent(textFieldBalance, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                        GroupLayout.PREFERRED_SIZE))
-                        .addGap(18)
-                        .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(lblLocked)
-                                .addComponent(textFieldLocked, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                                        GroupLayout.PREFERRED_SIZE))
-                        .addGap(18).addComponent(btnRefresh).addContainerGap()));
+                                    .addComponent(lblQr)
+                                    .addGap(18)
+                                    .addComponent(btnRefresh))
+                                .addComponent(textFieldAddress, GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                                .addComponent(textFieldLocked, GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE))))
+                    .addGap(40))
+        );
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(groupLayout.createSequentialGroup()
+                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addGap(24)
+                            .addComponent(lblQr, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(ComponentPlacement.RELATED))
+                        .addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+                            .addContainerGap(115, Short.MAX_VALUE)
+                            .addComponent(btnRefresh)
+                            .addGap(102)))
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblAddressLabel)
+                        .addComponent(textFieldAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblBalance)
+                        .addComponent(textFieldBalance, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblLocked)
+                        .addComponent(textFieldLocked, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(56))
+        );
         updateAccountInfo();
         setLayout(groupLayout);
     }
 
     private void setQRcode() {
         try {
-            logger.info("QR for: semux://" + rpcService.getSelectedWalletAccount().toAddressString());
+            //logger.info("QR for: semux://" + rpcService.getSelectedWalletAccount().toAddressString());
             BufferedImage bi = SwingUtil
                     .createQrImage("semux://" + rpcService.getSelectedWalletAccount().toAddressString(), 200, 200);
             lblQr.setIcon(new ImageIcon(bi));

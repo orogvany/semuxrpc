@@ -12,6 +12,7 @@ import org.semux.crypto.Hex;
 import org.semux.message.GUIMessages;
 import org.semux.util.SystemUtil;
 
+import de.phash.semuxrpc.dialog.InputDialog;
 import de.phash.semuxrpc.panels.ServerDialog;
 import de.phash.semuxrpc.panels.ServerPanel;
 
