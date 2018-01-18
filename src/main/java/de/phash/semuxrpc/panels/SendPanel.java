@@ -6,6 +6,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -20,6 +22,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import org.semux.core.TransactionType;
 import org.semux.crypto.CryptoException;
 import org.semux.crypto.EdDSA;
+import org.semux.crypto.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +34,24 @@ import de.phash.semuxrpc.gui.GUIMessages;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class SendPanel extends JPanel implements ActionListener {
+    public class Item {
+        EdDSA edDSA;
+
+        public Item(EdDSA edDSA) {
+            this.edDSA = edDSA;
+        }
+
+        public EdDSA getEdDSA() {
+            return edDSA;
+        }
+
+        @Override
+        public String toString() {
+            return Hex.PREF + edDSA.toAddressString();
+        }
+
+    }
+
     private RPCService rpcService;
     JComboBox<TransactionType> comboBoxTransactionType;
     private static final Logger logger = LoggerFactory.getLogger(SendPanel.class);
@@ -82,8 +103,8 @@ public class SendPanel extends JPanel implements ActionListener {
         btnConfirm.addActionListener(this);
         btnConfirm.setActionCommand(Action.OK.name());
 
-        JComboBox<EdDSA> accountss = new JComboBox<>();
-        for (EdDSA ele : rpcService.getAccounts()) {
+        JComboBox<Item> accountss = new JComboBox<>();
+        for (Item ele : getAccounts()) {
 
             accountss.addItem(ele);
         }
@@ -96,7 +117,9 @@ public class SendPanel extends JPanel implements ActionListener {
             public void itemStateChanged(ItemEvent event) {
                 if (event.getStateChange() == ItemEvent.SELECTED) {
                     Object item = event.getItem();
-                    rpcService.setSelectedWalletAccount((EdDSA) item);
+                    Item lineItem = (Item) item;
+
+                    rpcService.setSelectedWalletAccount(lineItem.getEdDSA());
                     logger.info(
                             "selected account changed to: " + rpcService.getSelectedWalletAccount().toAddressString());
                 }
@@ -168,6 +191,15 @@ public class SendPanel extends JPanel implements ActionListener {
                 .addGap(18).addComponent(btnConfirm).addPreferredGap(ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                 .addComponent(lblResult).addContainerGap()));
         setLayout(groupLayout);
+    }
+
+    private List<Item> getAccounts() {
+        List<Item> items = new ArrayList<>();
+        List<EdDSA> accounts = rpcService.getAccounts();
+        for (EdDSA edDSA : accounts) {
+            items.add(new Item(edDSA));
+        }
+        return items;
     }
 
     private static final long serialVersionUID = 1L;
