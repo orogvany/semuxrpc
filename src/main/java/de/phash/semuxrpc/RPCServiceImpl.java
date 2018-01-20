@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.semux.config.Config;
-import org.semux.config.MainNetConfig;
+import org.semux.config.MainnetConfig;
 import org.semux.core.Transaction;
 import org.semux.core.TransactionType;
 import org.semux.core.Wallet;
 import org.semux.crypto.CryptoException;
-import org.semux.crypto.EdDSA;
+import org.semux.crypto.Key;
 import org.semux.crypto.Hex;
 import org.semux.gui.model.WalletAccount;
 import org.semux.util.Bytes;
@@ -36,9 +36,9 @@ public class RPCServiceImpl implements RPCService {
         this.wallet = wallet;
     }
 
-    Config c = new MainNetConfig("");
+    Config c = new MainnetConfig("");
 
-    private EdDSA selectedAccount;
+    private Key selectedAccount;
 
     @Override
     public Config getConfig() {
@@ -72,7 +72,7 @@ public class RPCServiceImpl implements RPCService {
 
     private String signTransaction(Transaction transaction, String privateKey)
             throws InvalidKeySpecException, CryptoException {
-        transaction.sign(new EdDSA(Hex.decode0x(privateKey)));
+        transaction.sign(new Key(Hex.decode0x(privateKey)));
         return Hex.encode0x(transaction.toBytes());
     }
 
@@ -81,12 +81,12 @@ public class RPCServiceImpl implements RPCService {
     }
 
     @Override
-    public List<EdDSA> getAccounts() {
+    public List<Key> getAccounts() {
         return wallet.getAccounts();
     }
 
     @Override
-    public EdDSA getSelectedWalletAccount() {
+    public Key getSelectedWalletAccount() {
         if (selectedAccount == null)
 
             selectedAccount = wallet.getAccount(0);
@@ -108,14 +108,14 @@ public class RPCServiceImpl implements RPCService {
     
 
     @Override
-    public SendTransactionResponse sendTransaction(Transaction transaction, EdDSA selectedWalletAccount)
+    public SendTransactionResponse sendTransaction(Transaction transaction, Key selectedWalletAccount)
             throws ApiException {
         transaction.sign(selectedWalletAccount);
         return getApi(server).sendTransaction(Hex.encode0x(transaction.toBytes()));
     }
 
     @Override
-    public void setSelectedWalletAccount(EdDSA item) {
+    public void setSelectedWalletAccount(Key item) {
         selectedAccount = item;
     }
 
@@ -126,7 +126,7 @@ public class RPCServiceImpl implements RPCService {
         byte[] to = Hex.decode0x(toAddr);
         byte[] data = Hex.decode0x(dataString);
         Long fee = getConfig().minTransactionFee();
-        Transaction transaction = new Transaction(TransactionType.TRANSFER, to, amount, fee, nonce,
+        Transaction transaction = new Transaction(getConfig().network(),TransactionType.TRANSFER, to, amount, fee, nonce,
                 System.currentTimeMillis(), data);
         return sendTransaction(transaction, selectedAccount);
     }
@@ -135,7 +135,7 @@ public class RPCServiceImpl implements RPCService {
     public SendTransactionResponse sendTransactionRaw(TransactionType transfer, String toAddr, Long amount,
             String dataString, String privateKey)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException {
-        EdDSA acc = new EdDSA(Hex.decode0x(privateKey));
+        Key acc = new Key(Hex.decode0x(privateKey));
         Long nonce = getAccountInfo(acc.toAddressString()).getResult().getNonce();
         byte[] to = Hex.decode0x(toAddr);
         if (StringUtils.isEmpty(dataString )) {
@@ -143,7 +143,7 @@ public class RPCServiceImpl implements RPCService {
         }
         byte[] data = Bytes.of(dataString);
         Long fee = getConfig().minTransactionFee();
-        Transaction transaction = new Transaction(TransactionType.TRANSFER, to, amount, fee, nonce,
+        Transaction transaction = new Transaction(getConfig().network(), TransactionType.TRANSFER, to, amount, fee, nonce,
                 System.currentTimeMillis(), data);
         //String raw = signTransaction(transaction, privateKey);
         return sendTransaction(transaction, acc);

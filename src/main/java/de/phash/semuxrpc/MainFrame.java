@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -25,8 +23,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import org.semux.core.Wallet;
-import org.semux.crypto.EdDSA;
 import org.semux.crypto.Hex;
+import org.semux.crypto.Key;
 import org.semux.gui.SwingUtil;
 import org.semux.util.SystemUtil;
 
@@ -241,7 +239,7 @@ public class MainFrame extends JFrame implements ActionListener {
             if (pk != null) {
                 try {
                     Wallet wallet = rpcService.getWallet();
-                    EdDSA account = new EdDSA(Hex.decode0x(pk));
+                    Key account = new Key(Hex.decode0x(pk));
                     if (wallet.addAccount(account)) {
                         wallet.flush();
                         JOptionPane.showMessageDialog(this, GUIMessages.get("PrivateKeyImportSuccess"));

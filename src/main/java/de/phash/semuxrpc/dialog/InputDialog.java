@@ -21,8 +21,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.semux.gui.Action;
 import org.semux.gui.SwingUtil;
-import org.semux.message.GUIMessages;
 import org.semux.util.exception.UnreachableException;
+
+import de.phash.semuxrpc.gui.GUIMessages;
 
 public class InputDialog extends JDialog implements ActionListener {
 

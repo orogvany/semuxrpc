@@ -4,7 +4,7 @@
 
 	<groupId>de.phash</groupId>
 	<artifactId>semux-rpc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>semux-rpc</name>
@@ -157,9 +157,8 @@
 		<dependency>
 			<groupId>com.github.semuxproject</groupId>
 			<artifactId>semux</artifactId>
-			<version>v1.0.0-rc.5</version>
+			<version>v1.0.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.github.phash</groupId>
 			<artifactId>semux-swagger</artifactId>

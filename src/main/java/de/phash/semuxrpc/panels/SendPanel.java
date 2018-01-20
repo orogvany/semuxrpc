@@ -21,7 +21,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.semux.core.TransactionType;
 import org.semux.crypto.CryptoException;
-import org.semux.crypto.EdDSA;
+import org.semux.crypto.Key;
 import org.semux.crypto.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,19 +35,19 @@ import de.phash.semuxrpc.gui.SwingUtil;
 
 public class SendPanel extends JPanel implements ActionListener {
     public class Item {
-        EdDSA edDSA;
+        Key Key;
 
-        public Item(EdDSA edDSA) {
-            this.edDSA = edDSA;
+        public Item(Key Key) {
+            this.Key = Key;
         }
 
-        public EdDSA getEdDSA() {
-            return edDSA;
+        public Key getKey() {
+            return Key;
         }
 
         @Override
         public String toString() {
-            return Hex.PREF + edDSA.toAddressString();
+            return Hex.PREF + Key.toAddressString();
         }
 
     }
@@ -119,7 +119,7 @@ public class SendPanel extends JPanel implements ActionListener {
                     Object item = event.getItem();
                     Item lineItem = (Item) item;
 
-                    rpcService.setSelectedWalletAccount(lineItem.getEdDSA());
+                    rpcService.setSelectedWalletAccount(lineItem.getKey());
                     logger.info(
                             "selected account changed to: " + rpcService.getSelectedWalletAccount().toAddressString());
                 }
@@ -195,9 +195,9 @@ public class SendPanel extends JPanel implements ActionListener {
 
     private List<Item> getAccounts() {
         List<Item> items = new ArrayList<>();
-        List<EdDSA> accounts = rpcService.getAccounts();
-        for (EdDSA edDSA : accounts) {
-            items.add(new Item(edDSA));
+        List<Key> accounts = rpcService.getAccounts();
+        for (Key Key : accounts) {
+            items.add(new Item(Key));
         }
         return items;
     }

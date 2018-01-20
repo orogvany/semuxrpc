@@ -30,11 +30,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.semux.core.Wallet;
-import org.semux.crypto.EdDSA;
-import org.semux.message.GUIMessages;
+import org.semux.crypto.Key;
 import org.semux.util.SystemUtil;
 import org.semux.util.exception.UnreachableException;
 
+import de.phash.semuxrpc.gui.GUIMessages;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class WelcomeFrame extends JFrame implements ActionListener {
@@ -203,7 +203,7 @@ public class WelcomeFrame extends JFrame implements ActionListener {
             }
 
             if (backupFile == null) {
-                EdDSA key = new EdDSA();
+                Key key = new Key();
                 wallet.addAccount(key);
                 wallet.flush();
 

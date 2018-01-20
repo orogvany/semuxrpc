@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.semux.core.Wallet;
-import org.semux.crypto.EdDSA;
+import org.semux.crypto.Key;
 import org.semux.crypto.Hex;
-import org.semux.message.GUIMessages;
 import org.semux.util.SystemUtil;
 
 import de.phash.semuxrpc.dialog.InputDialog;
+import de.phash.semuxrpc.gui.GUIMessages;
 import de.phash.semuxrpc.panels.ServerDialog;
 import de.phash.semuxrpc.panels.ServerPanel;
 
@@ -64,13 +64,13 @@ public class RpcGUI {
         if (wallet.size() > 1) {
             String message = GUIMessages.get("AccountSelection");
             List<Object> options = new ArrayList<>();
-            List<EdDSA> list = wallet.getAccounts();
+            List<Key> list = wallet.getAccounts();
             for (int i = 0; i < list.size(); i++) {
                 options.add(Hex.PREF + list.get(i).toAddressString() + ", " + GUIMessages.get("AccountNumShort", i));
             }
 
         } else if (wallet.size() == 0) {
-            wallet.addAccount(new EdDSA());
+            wallet.addAccount(new Key());
             wallet.flush();
         }
         rpcService = new RPCServiceImpl(wallet);

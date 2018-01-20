@@ -9,7 +9,7 @@ import org.semux.core.Transaction;
 import org.semux.core.TransactionType;
 import org.semux.core.Wallet;
 import org.semux.crypto.CryptoException;
-import org.semux.crypto.EdDSA;
+import org.semux.crypto.Key;
 import org.semux.gui.model.WalletAccount;
 
 import de.phash.semux.swagger.client.ApiException;
@@ -21,7 +21,7 @@ public interface RPCService {
     GetAccountResponse getAccountInfo(String address) throws IOException, ApiException;
 
 
-    EdDSA getSelectedWalletAccount();
+    Key getSelectedWalletAccount();
 
     AccountInfo getAccount() throws IOException, ApiException;
 
@@ -33,11 +33,11 @@ public interface RPCService {
     SendTransactionResponse sendTransaction(Transaction transaction, WalletAccount account)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException;
 
-    SendTransactionResponse sendTransaction(Transaction transaction, EdDSA selectedWalletAccount) throws ApiException;
+    SendTransactionResponse sendTransaction(Transaction transaction, Key selectedWalletAccount) throws ApiException;
 
-    List<EdDSA> getAccounts();
+    List<Key> getAccounts();
 
-    void setSelectedWalletAccount(EdDSA item);
+    void setSelectedWalletAccount(Key item);
 
 
     SendTransactionResponse sendTransaction(TransactionType transfer, String toAddr, Long amount,
