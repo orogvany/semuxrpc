@@ -132,7 +132,7 @@ public class RPCServiceImpl implements RPCService {
     }
 
     @Override
-    public SendTransactionResponse sendTransactionRaw(TransactionType transfer, String toAddr, Long amount,
+    public SendTransactionResponse sendTransactionRaw(TransactionType transactionType, String toAddr, Long amount,
             String dataString, String privateKey)
             throws IOException, ApiException, InvalidKeySpecException, CryptoException {
         Key acc = new Key(Hex.decode0x(privateKey));
@@ -143,7 +143,7 @@ public class RPCServiceImpl implements RPCService {
         }
         byte[] data = Bytes.of(dataString);
         Long fee = getConfig().minTransactionFee();
-        Transaction transaction = new Transaction(getConfig().network(), TransactionType.TRANSFER, to, amount, fee, nonce,
+        Transaction transaction = new Transaction(getConfig().network(), transactionType, to, amount, fee, nonce,
                 System.currentTimeMillis(), data);
         //String raw = signTransaction(transaction, privateKey);
         return sendTransaction(transaction, acc);
