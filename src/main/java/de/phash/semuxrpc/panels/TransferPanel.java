@@ -38,7 +38,7 @@ public class TransferPanel extends JPanel implements ActionListener {
     private JTextField formattedTextFieldFee;
     private JCheckBox chckbxAutoFee;
     private JComboBox<TransactionType> comboBoxTransactionType;
-    private TransactionType transactionType;
+    private TransactionType transactionType = TransactionType.TRANSFER;
 
     private JLabel lblResult;
     private JTextField textFieldData;

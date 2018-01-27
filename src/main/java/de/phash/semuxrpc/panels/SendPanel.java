@@ -35,23 +35,13 @@ import de.phash.semuxrpc.gui.GUIMessages;
 import de.phash.semuxrpc.gui.SwingUtil;
 
 public class SendPanel extends JPanel implements ActionListener {
-    public class Item {
-        Key Key;
 
-        public Item(Key Key) {
-            this.Key = Key;
-        }
-
-        public Key getKey() {
-            return Key;
-        }
-
-        @Override
-        public String toString() {
-            return Hex.PREF + Key.toAddressString();
-        }
-
-    }
+    private static final long serialVersionUID = 1L;
+    private JTextField textFieldTo;
+    private JTextField textFieldAmount;
+    private JTextField textFieldFee;
+    private JTextField textFieldData;
+    private TransactionType transactionType = TransactionType.TRANSFER;
 
     private RPCService rpcService;
     JComboBox<TransactionType> comboBoxTransactionType;
@@ -203,13 +193,6 @@ public class SendPanel extends JPanel implements ActionListener {
         return items;
     }
 
-    private static final long serialVersionUID = 1L;
-    private JTextField textFieldTo;
-    private JTextField textFieldAmount;
-    private JTextField textFieldFee;
-    private JTextField textFieldData;
-    private TransactionType transactionType;
-
     @Override
     public void actionPerformed(ActionEvent event) {
         lblResult.setIcon(SwingUtil.loadImage("yellow", 20, 20));
@@ -247,9 +230,31 @@ public class SendPanel extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * default donation to me :)
+     */
     public void donate() {
         textFieldTo.setText("0x09c5f2794d69717d538bfcc150644f7685945cfa");
         textFieldAmount.setText("" + (5 * Unit.SEM));
         textFieldData.setText("Donation to Phash");
     }
+
+    public class Item {
+        Key Key;
+
+        public Item(Key Key) {
+            this.Key = Key;
+        }
+
+        public Key getKey() {
+            return Key;
+        }
+
+        @Override
+        public String toString() {
+            return Hex.PREF + Key.toAddressString();
+        }
+
+    }
+
 }
