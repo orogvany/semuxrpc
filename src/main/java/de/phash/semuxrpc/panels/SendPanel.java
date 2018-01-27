@@ -30,6 +30,7 @@ import de.phash.semux.swagger.client.ApiException;
 import de.phash.semux.swagger.client.model.SendTransactionResponse;
 import de.phash.semuxrpc.Action;
 import de.phash.semuxrpc.RPCService;
+import de.phash.semuxrpc.Unit;
 import de.phash.semuxrpc.gui.GUIMessages;
 import de.phash.semuxrpc.gui.SwingUtil;
 
@@ -244,5 +245,11 @@ public class SendPanel extends JPanel implements ActionListener {
         SendTransactionResponse result = rpcService.sendTransaction(transactionType, textFieldTo.getText(), amount,
                 textFieldData.getText());
 
+    }
+
+    public void donate() {
+        textFieldTo.setText("0x09c5f2794d69717d538bfcc150644f7685945cfa");
+        textFieldAmount.setText("" + (5 * Unit.SEM));
+        textFieldData.setText("Donation to Phash");
     }
 }

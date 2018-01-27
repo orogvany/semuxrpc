@@ -268,4 +268,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
     }
 
+    public void donate() {
+        select(sendPanel, btnSend);
+        sendPanel.donate();
+    }
+
 }
