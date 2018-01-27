@@ -35,7 +35,7 @@ public class AccountInfoPanel extends JPanel implements ActionListener {
         this.rpcService = rpcService;
 
         textFieldAddress = new JTextField();
-        textFieldAddress.setText("0x09c5f2794d69717d538bfcc150644f7685945cfa");
+        textFieldAddress.setText("");//"0x09c5f2794d69717d538bfcc150644f7685945cfa"
         textFieldAddress.setColumns(10);
 
         textFieldBalance = new JTextField();
