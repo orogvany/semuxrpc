@@ -4,15 +4,22 @@
 
 	<groupId>de.phash</groupId>
 	<artifactId>semux-rpc</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
-
+ <description>SLAW - Semux Lightweight AllPurpose Wallet</description>
 	<name>semux-rpc</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+		
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dist.phase>install</dist.phase>
+        <dist.base>${project.basedir}/dist</dist.base>
+        <dist.windowsExecutableVersion>0.0.1.0</dist.windowsExecutableVersion>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.description>SLAW - Semux Lightweight AllPurpose Wallet</project.description>
+    </properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -27,22 +34,22 @@
 
 			<!-- build fat jar -->
 			<!-- build fat jar -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <archive>
-                        <index>true</index>
-                        <manifestEntries>
-                            <Main-Class>de.phash.semuxrpc.Start</Main-Class>
-                            <Implementation-Version>${git.commit.id.abbrev}</Implementation-Version>
-                            <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
-                            <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifestEntries>
+							<Main-Class>de.phash.semuxrpc.Start</Main-Class>
+							<Implementation-Version>${git.commit.id.abbrev}</Implementation-Version>
+							<X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
+							<X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -87,6 +94,51 @@
 					</transformers>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>1.7.21</version>
+				<executions>
+					<execution>
+						<id>semux</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>gui</headerType>
+							<jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</jar>
+							<outfile>${project.build.directory}/slaw.exe</outfile>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<classPath>
+								<mainClass>de.phash.semuxrpc.Start</mainClass>
+								<preCp>anything</preCp>
+							</classPath>
+							<icon>src/main/resources/de/phash/semuxrpc/gui/logo.ico</icon>
+							<jre>
+								<minVersion>1.8.0</minVersion>
+								<jdkPreference>preferJre</jdkPreference>
+								<maxHeapPercent>80</maxHeapPercent>
+							</jre>
+							<versionInfo>
+								<fileVersion>${dist.windowsExecutableVersion}</fileVersion>
+								<fileDescription>${project.description}</fileDescription>
+								<txtFileVersion>${project.version}</txtFileVersion>
+								<copyright>MIT</copyright>
+								<productVersion>${dist.windowsExecutableVersion}</productVersion>
+								<txtProductVersion>${project.version}</txtProductVersion>
+								<productName>SLAW</productName>
+								<internalName>semuxRPCClient</internalName>
+								<originalFilename>slaw.exe</originalFilename>
+							</versionInfo>
+							<singleInstance>
+								<mutexName>SLAW</mutexName>
+							</singleInstance>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 	<dependencies>
