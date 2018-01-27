@@ -1,25 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.phash</groupId>
 	<artifactId>semux-rpc</artifactId>
 	<version>0.1.0</version>
 	<packaging>jar</packaging>
- <description>SLAW - Semux Lightweight AllPurpose Wallet</description>
+	<description>SLAW - Semux Lightweight AllPurpose Wallet</description>
 	<name>semux-rpc</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/phash/semuxrpc</url>
 
 	<properties>
-		
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dist.phase>install</dist.phase>
-        <dist.base>${project.basedir}/dist</dist.base>
-        <dist.windowsExecutableVersion>0.0.1.0</dist.windowsExecutableVersion>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.description>SLAW - Semux Lightweight AllPurpose Wallet</project.description>
-    </properties>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<dist.phase>install</dist.phase>
+		<dist.base>${project.basedir}/dist</dist.base>
+		<dist.windowsExecutableVersion>0.0.1.0</dist.windowsExecutableVersion>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -33,7 +32,6 @@
 			</plugin>
 
 			<!-- build fat jar -->
-			<!-- build fat jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -43,14 +41,14 @@
 						<index>true</index>
 						<manifestEntries>
 							<Main-Class>de.phash.semuxrpc.Start</Main-Class>
-							<Implementation-Version>${git.commit.id.abbrev}</Implementation-Version>
+							<Implementation-Version>${project.version}</Implementation-Version>
 							<X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
 							<X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
 						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Maven Assembly Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -63,24 +61,24 @@
 					</descriptorRefs>
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
-					  <manifest>
-						<mainClass>de.phash.semuxrpc.Start</mainClass>
-					  </manifest>
+						<manifest>
+							<mainClass>de.phash.semuxrpc.Start</mainClass>
+						</manifest>
 					</archive>
 
 				</configuration>
 				<executions>
-				  <execution>
-					<id>make-assembly</id>
-                                        <!-- bind to the packaging phase -->
-					<phase>package</phase>
-					<goals>
-						<goal>single</goal>
-					</goals>
-				  </execution>
+					<execution>
+						<id>make-assembly</id>
+						<!-- bind to the packaging phase -->
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -99,14 +97,6 @@
 					<artifactSet>
 						<excludes>
 							<exclude>junit:*</exclude>
-							<exclude>org.powermock:*</exclude>
-							<exclude>com.github.stefanbirkner:system-rules</exclude>
-							<exclude>org.assertj:*</exclude>
-							<exclude>org.awaitility:*</exclude>
-							<exclude>org.easytesting:*</exclude>
-							<exclude>net.bytebuddy:*</exclude>
-							<exclude>org.hamcrest:*</exclude>
-							<exclude>org.mockito:*</exclude>
 						</excludes>
 					</artifactSet>
 					<transformers>
