@@ -8,4 +8,4 @@ When you do not want to run a full node, just use this Client
  - Transfer Funds
  - Vote 
  - Unvote
-- Do all these things for a non imported account, too - just with your private key!
+- Do all these things for a non imported account, too - just with your private key! 
